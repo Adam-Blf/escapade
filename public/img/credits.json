@@ -1,0 +1,74 @@
+{
+  "dieppe": {
+    "page": "Dieppe (Seine-Maritime)",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/f/fe/Arcades_de_la_Bourse%2C_Dieppe.jpg"
+  },
+  "etretat": {
+    "page": "Étretat",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Vue_d%27%C3%89tretat.jpg/3840px-Vue_d%27%C3%89tretat.jpg"
+  },
+  "saint-malo": {
+    "page": "Saint-Malo",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/8/83/IMG_2935_StMalo.JPG"
+  },
+  "la-rochelle": {
+    "page": "La Rochelle",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/2/22/Entree_vieux_port_La_Rochelle.JPG"
+  },
+  "biarritz": {
+    "page": "Biarritz",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Biarritz_vue_g%C3%A9n%C3%A9rale.jpg/3840px-Biarritz_vue_g%C3%A9n%C3%A9rale.jpg"
+  },
+  "marseille": {
+    "page": "Marseille",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Notre_Dame_de_la_Garde.jpg/3840px-Notre_Dame_de_la_Garde.jpg"
+  },
+  "sete": {
+    "page": "Sète",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/La_Grace_%28ship%2C_2010%29%2C_S%C3%A8te%2C_H%C3%A9rault_01.jpg/3840px-La_Grace_%28ship%2C_2010%29%2C_S%C3%A8te%2C_H%C3%A9rault_01.jpg"
+  },
+  "collioure": {
+    "page": "Collioure",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Collioure_03-08_11.jpg"
+  },
+  "nice": {
+    "page": "Nice",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/9/94/Promenade_des_Anglais_%2822261311858%29.jpg"
+  },
+  "cassis": {
+    "page": "Cassis (Bouches-du-Rhône)",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Cassis-Port.jpg/3840px-Cassis-Port.jpg"
+  },
+  "le-treport": {
+    "page": "Le Tréport",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/3/3d/Vue_depuis_terrasse_du_Treport.JPG"
+  },
+  "deauville": {
+    "page": "Deauville",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/France-000638_-_Grand_Casino_%2814974258481%29.jpg/3840px-France-000638_-_Grand_Casino_%2814974258481%29.jpg"
+  },
+  "annecy": {
+    "page": "Annecy",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Annecy%2C_France_%2837635411615%29.jpg/3840px-Annecy%2C_France_%2837635411615%29.jpg"
+  },
+  "chamonix": {
+    "page": "Chamonix-Mont-Blanc",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Chamonix_008_%2B_noms.jpg"
+  },
+  "gerardmer": {
+    "page": "Gérardmer",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/8/8f/Tourdemerelleagerardmer.jpg"
+  },
+  "lyon": {
+    "page": "Lyon",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/e/ee/Montage-Lyon-2023.jpg"
+  },
+  "lille": {
+    "page": "Lille",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/3/3b/Lille_Collage.jpg"
+  },
+  "strasbourg": {
+    "page": "Strasbourg",
+    "source": "https://upload.wikimedia.org/wikipedia/commons/0/0e/Strasbourg_vue_a%C3%A9rienne_vers_la_cath%C3%A9drale_septembre_2015.jpg"
+  }
+}

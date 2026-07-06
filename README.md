@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Escapade
 
-## Getting Started
+![version](https://img.shields.io/badge/version-0.1.0-001329?style=flat-square)
+![stack](https://img.shields.io/badge/Next.js%2016-TypeScript%20%2B%20Tailwind%204%20%2B%20framer--motion-D4A437?style=flat-square)
+![status](https://img.shields.io/badge/status-MVP-001329?style=flat-square)
 
-First, run the development server:
+Planificateur de vacances au départ de Paris, pensé pour les budgets étudiants.
+Décris ton envie en une phrase ("pas riche mais envie de voir la mer, 300€,
+fin août, seule ou à 2") ou coche tes critères : Escapade classe 18 destinations
+françaises et calcule le budget réel, solo et à deux.
+
+## Features
+
+- [x] Mode langage naturel FR : parsing budget, voyageurs, envies (mer / montagne / lac / ville), mois, durée
+- [x] Mode critères : sliders budget et nuits, chips envies, radio solo / duo, mois
+- [x] Moteur de scoring : match envies, fit budget (ok / juste / au-dessus), saisonnalité
+- [x] Estimation budget détaillée par destination : transport AR (tarifs jeunes inclus), hébergement dortoir vs chambre à deux, repas, activités
+- [x] Cards résultats en style billet de train (ligne perforée, code gare, route PAR -> XXX)
+- [x] 18 destinations avec photos locales (Wikipédia / Wikimedia Commons)
+- [x] Dark mode automatique, reduced motion respecté, animations framer-motion
+
+## Stack
+
+Next.js 16 (App Router, Turbopack), TypeScript, Tailwind CSS 4, framer-motion 12.
+Fonts : Bricolage Grotesque (display), Instrument Sans (body), IBM Plex Mono (données billet).
+Aucune API externe au runtime : dataset local (`lib/destinations.ts`), images statiques (`public/img`).
+
+## Dev
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
+npm run build   # build de prod
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Données et limites
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Les prix sont des ordres de grandeur (résa anticipée, tarif -26 ans Nomad,
+Ouigo dès 19€) codés dans `lib/destinations.ts`. Ils n'ont aucune valeur
+contractuelle : vérifier sur SNCF Connect / Ouigo avant de réserver.
+Crédits photos : `public/img/credits.json`.

@@ -1,0 +1,60 @@
+import { destinations } from "./destinations";
+import type { Criteria, Destination, Estimate, Result } from "./types";
+
+const ACTIVITIES = 25;
+
+export function estimate(dest: Destination, nights: number): Estimate {
+  const days = nights + 1;
+  const transport = dest.transport.priceAR;
+  const lodgingSolo = nights * dest.lodging.dorm;
+  const lodgingDuo = Math.round((nights * dest.lodging.duo) / 2);
+  const food = days * dest.foodPerDay;
+  return {
+    transport,
+    lodgingSolo,
+    lodgingDuo,
+    food,
+    activities: ACTIVITIES,
+    totalSolo: transport + lodgingSolo + food + ACTIVITIES,
+    totalDuo: transport + lodgingDuo + food + ACTIVITIES,
+  };
+}
+
+export function rank(criteria: Criteria, limit = 6): Result[] {
+  const results: Result[] = destinations.map((dest) => {
+    const est = estimate(dest, criteria.nights);
+    let score = 0;
+
+    if (criteria.vibes.length > 0) {
+      const matches = dest.vibes.filter((v) => criteria.vibes.includes(v)).length;
+      score += matches > 0 ? 3 * matches : -6;
+    }
+
+    // Le budget de référence : le plus optimiste des deux configurations
+    const cheapest = Math.min(est.totalSolo, est.totalDuo);
+    let fit: Result["fit"] = null;
+    if (criteria.budget !== null) {
+      const b = criteria.budget;
+      if (cheapest <= b) {
+        fit = "ok";
+        score += 2 + Math.min(0.5, (b - cheapest) / b);
+      } else if (cheapest <= b * 1.15) {
+        fit = "tight";
+        score += 0.5;
+      } else {
+        fit = "over";
+        score -= (4 * (cheapest - b)) / b;
+      }
+    }
+
+    if (criteria.month !== null && dest.bestMonths.includes(criteria.month)) {
+      score += 1;
+    }
+
+    return { dest, est, score, fit };
+  });
+
+  return results
+    .sort((a, b) => b.score - a.score || a.est.totalSolo - b.est.totalSolo)
+    .slice(0, limit);
+}

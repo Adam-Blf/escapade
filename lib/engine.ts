@@ -3,26 +3,44 @@ import type { Criteria, Destination, Estimate, Result } from "./types";
 
 const ACTIVITIES = 25;
 
-export function estimate(dest: Destination, nights: number): Estimate {
+export function estimate(
+  dest: Destination,
+  nights: number,
+  travelers: number | null
+): Estimate {
   const days = nights + 1;
   const transport = dest.transport.priceAR;
   const lodgingSolo = nights * dest.lodging.dorm;
   const lodgingDuo = Math.round((nights * dest.lodging.duo) / 2);
   const food = days * dest.foodPerDay;
+  const totalSolo = transport + lodgingSolo + food + ACTIVITIES;
+  const totalDuo = transport + lodgingDuo + food + ACTIVITIES;
+
+  // À partir de 2 : on retient la formule la moins chère par personne
+  // (dortoir ou chambres partagées)
+  let totalPP: number | null = null;
+  let totalGroup: number | null = null;
+  if (travelers !== null) {
+    totalPP = travelers === 1 ? totalSolo : Math.min(totalSolo, totalDuo);
+    totalGroup = totalPP * travelers;
+  }
+
   return {
     transport,
-    lodgingSolo,
-    lodgingDuo,
     food,
     activities: ACTIVITIES,
-    totalSolo: transport + lodgingSolo + food + ACTIVITIES,
-    totalDuo: transport + lodgingDuo + food + ACTIVITIES,
+    totalSolo,
+    totalDuo,
+    lodgingSolo,
+    lodgingDuo,
+    totalPP,
+    totalGroup,
   };
 }
 
 export function rank(criteria: Criteria, limit = 6): Result[] {
   const results: Result[] = destinations.map((dest) => {
-    const est = estimate(dest, criteria.nights);
+    const est = estimate(dest, criteria.nights, criteria.travelers);
     let score = 0;
 
     if (criteria.vibes.length > 0) {
@@ -30,20 +48,20 @@ export function rank(criteria: Criteria, limit = 6): Result[] {
       score += matches > 0 ? 3 * matches : -6;
     }
 
-    // Le budget de référence : le plus optimiste des deux configurations
-    const cheapest = Math.min(est.totalSolo, est.totalDuo);
+    // Budget par personne de référence : la config demandée, sinon la plus optimiste
+    const ref = est.totalPP ?? Math.min(est.totalSolo, est.totalDuo);
     let fit: Result["fit"] = null;
     if (criteria.budget !== null) {
       const b = criteria.budget;
-      if (cheapest <= b) {
+      if (ref <= b) {
         fit = "ok";
-        score += 2 + Math.min(0.5, (b - cheapest) / b);
-      } else if (cheapest <= b * 1.15) {
+        score += 2 + Math.min(0.5, (b - ref) / b);
+      } else if (ref <= b * 1.15) {
         fit = "tight";
         score += 0.5;
       } else {
         fit = "over";
-        score -= (4 * (cheapest - b)) / b;
+        score -= (4 * (ref - b)) / b;
       }
     }
 

@@ -2,7 +2,10 @@ export type Vibe = "mer" | "montagne" | "ville" | "lac";
 
 export interface Criteria {
   budget: number | null;
-  travelers: 1 | 2 | null;
+  /** null = configuration libre, on affiche solo et à deux */
+  travelers: number | null;
+  /** Description libre du groupe : âges, étudiants, enfants, mobilité... */
+  profile: string | null;
   vibes: Vibe[];
   month: number | null;
   nights: number;
@@ -22,7 +25,9 @@ export interface Destination {
     note?: string;
   };
   lodging: {
+    /** lit en dortoir / emplacement camping, par personne et par nuit */
     dorm: number;
+    /** chambre double / tente pour deux, prix total par nuit */
     duo: number;
   };
   foodPerDay: number;
@@ -33,12 +38,18 @@ export interface Destination {
 
 export interface Estimate {
   transport: number;
-  lodgingSolo: number;
-  lodgingDuo: number;
   food: number;
   activities: number;
+  /** par personne, seul(e) en dortoir */
   totalSolo: number;
+  /** par personne, chambre partagée à deux */
   totalDuo: number;
+  lodgingSolo: number;
+  lodgingDuo: number;
+  /** par personne pour le groupe demandé (null si config libre) */
+  totalPP: number | null;
+  /** total pour tout le groupe (null si config libre) */
+  totalGroup: number | null;
 }
 
 export type BudgetFit = "ok" | "tight" | "over";
@@ -48,4 +59,11 @@ export interface Result {
   est: Estimate;
   score: number;
   fit: BudgetFit | null;
+}
+
+export interface PriceQuote {
+  dest: string;
+  transportAR: number;
+  source: string;
+  live: boolean;
 }

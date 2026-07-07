@@ -32,6 +32,15 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+
+# secrets · défense en profondeur
+*secret*
+*.token
+sbp_*
+ghp_*
+github_pat_*
+sk_live_*
 
 # vercel
 .vercel

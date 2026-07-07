@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { parseText } from "@/lib/parse";
 import { rank } from "@/lib/engine";
 import { parseSignals, tipsFor } from "@/lib/profile";
 import { DEFAULT_ORIGIN, ORIGINS, getOrigin } from "@/lib/origins";
+import { criteriaFromParams, criteriaToParams } from "@/lib/share";
+import { loadRecent, saveRecent, type RecentSearch } from "@/lib/recent";
 import type { Criteria, OriginSlug, Result } from "@/lib/types";
 import { CriteriaForm } from "./CriteriaForm";
 import { TicketCard } from "./TicketCard";
@@ -40,14 +42,49 @@ export function Planner() {
   const [text, setText] = useState("");
   const [applied, setApplied] = useState<Criteria | null>(null);
   const [results, setResults] = useState<Result[] | null>(null);
+  const [recent, setRecent] = useState<RecentSearch[]>([]);
 
-  const search = (c: Criteria) => {
+  const apply = (c: Criteria) => {
     setApplied(c);
     setResults(rank(c));
     // le texte peut imposer sa propre origine ("depuis Lyon") : on
     // resynchronise le sélecteur pour que l'UI reste cohérente
-    if (c.origin !== origin) setOrigin(c.origin);
+    setOrigin(c.origin);
   };
+
+  const search = (c: Criteria) => {
+    apply(c);
+    saveRecent(c);
+    setRecent(loadRecent());
+    // recherche partageable par lien · pushState pour que back/forward marchent
+    const qs = criteriaToParams(c).toString();
+    window.history.pushState(null, "", `?${qs}`);
+  };
+
+  // Restauration · lien partagé au chargement, back/forward ensuite.
+  // rAF : l'hydratation SSR rend d'abord l'état nu, le vrai état arrive juste
+  // après (localStorage et URL sont des systèmes externes, lecture client only).
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      setRecent(loadRecent());
+      const fromUrl = criteriaFromParams(new URLSearchParams(window.location.search));
+      if (fromUrl) apply(fromUrl);
+    });
+
+    const onPop = () => {
+      const c = criteriaFromParams(new URLSearchParams(window.location.search));
+      if (c) apply(c);
+      else {
+        setApplied(null);
+        setResults(null);
+      }
+    };
+    window.addEventListener("popstate", onPop);
+    return () => {
+      cancelAnimationFrame(id);
+      window.removeEventListener("popstate", onPop);
+    };
+  }, []);
 
   return (
     <MotionConfig reducedMotion="user">
@@ -196,6 +233,25 @@ export function Planner() {
             )}
           </AnimatePresence>
         </motion.div>
+
+        {/* Dernières recherches */}
+        {!results && recent.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2 pt-6">
+            <span className="font-mono text-xs uppercase tracking-widest text-inksoft">
+              Reprendre
+            </span>
+            {recent.map((r) => (
+              <button
+                key={r.at}
+                type="button"
+                onClick={() => search(r.criteria)}
+                className="rounded-full border border-line px-3 py-1 text-xs text-inksoft transition-colors hover:border-maree hover:text-ink"
+              >
+                {criteriaChips(r.criteria).slice(0, 4).join(" · ")}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* Résultats */}
         {results && applied && (

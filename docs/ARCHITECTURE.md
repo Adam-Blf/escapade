@@ -23,6 +23,9 @@ lib/            source de vérité, testée en isolation (tests/*.test.ts)
   ├─ links.ts            deep-links de réservation (Trainline, Booking, HostelWorld)
   ├─ share.ts            Criteria ↔ query params, assainissement des entrées
   ├─ recent.ts           historique des recherches (localStorage, client-only)
+  ├─ compare.ts           sélection de destinations à comparer (toggle, limite à 3)
+  ├─ theme.ts             thème clair/sombre manuel (script anti-flash, localStorage)
+  ├─ site.ts              constantes du site (nom, URL) pour metadata/sitemap
   ├─ useLiveQuote.ts     hook consommant /api/prices pour un ticket donné
   └─ version.ts          version applicative (importée depuis package.json)
 
@@ -30,12 +33,20 @@ components/       UI pure, consomme lib/
   ├─ Planner.tsx          orchestrateur de recherche (mode texte / critères, état de session)
   ├─ CriteriaForm.tsx      mode critères
   ├─ TicketCard.tsx        carte résultat + actions de réservation/partage
-  └─ DestinationBudget.tsx budget interactif de la page détail
+  ├─ Comparator.tsx        modal de comparaison de 2-3 destinations
+  ├─ DestinationBudget.tsx budget interactif de la page détail
+  ├─ DonateButton.tsx      lien Payment Link Stripe, masqué si non configuré
+  └─ ThemeToggle.tsx       bascule clair/sombre manuelle
 
 app/              routing Next.js App Router
   ├─ page.tsx                page d'accueil (monte <Planner />)
   ├─ destination/[slug]/page.tsx  page détail (generateStaticParams + metadata par page)
-  └─ api/prices/route.ts   endpoint de devis temps réel (utilisé par useLiveQuote)
+  ├─ soutenir/page.tsx       page don
+  ├─ api/prices/route.ts    endpoint de devis temps réel (utilisé par useLiveQuote)
+  ├─ sitemap.ts / robots.ts  SEO
+  ├─ manifest.ts             PWA
+  └─ icon.tsx / apple-icon.tsx / opengraph-image.tsx / icon-192 / icon-512
+                             icônes et image OG générées au build (next/og, zéro asset binaire)
 ```
 
 ## Flux de données

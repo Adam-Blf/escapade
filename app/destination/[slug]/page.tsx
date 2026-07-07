@@ -23,9 +23,12 @@ export async function generateMetadata({
   const { slug } = await params;
   const dest = destinations.find((d) => d.slug === slug);
   if (!dest) return {};
+  const description = `${dest.tagline} Budget réel train + logement + repas depuis Paris, Lyon, Lille, Marseille ou Bordeaux.`;
   return {
-    title: `${dest.name} · Escapade`,
-    description: `${dest.tagline} Budget réel train + logement + repas depuis Paris, Lyon, Lille, Marseille ou Bordeaux.`,
+    title: dest.name,
+    description,
+    openGraph: { title: dest.name, description },
+    twitter: { title: dest.name, description },
   };
 }
 

@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { getOrigin } from "@/lib/origins";
+import { bookingUrl, hostelUrl, searchShareUrl, trainUrl } from "@/lib/links";
 import { useLiveQuote } from "@/lib/useLiveQuote";
 import type { Criteria, Result } from "@/lib/types";
 
@@ -21,7 +23,28 @@ export function TicketCard({
   criteria: Criteria;
   index: number;
 }) {
+  const [copied, setCopied] = useState(false);
   const { dest, transport, est, fit } = result;
+
+  const share = async () => {
+    const url = searchShareUrl(criteria);
+    const title = `Escapade · ${dest.name} pour ~${est.totalDuo}€`;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title, url });
+        return;
+      }
+    } catch {
+      /* partage annulé : on retombe sur la copie */
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* clipboard bloqué : rien à faire de plus */
+    }
+  };
   const originCode = getOrigin(criteria.origin).code;
   const showSolo = criteria.travelers !== 2;
   const showDuo = criteria.travelers !== 1;
@@ -135,6 +158,42 @@ export function TicketCard({
             </p>
           </div>
         )}
+      </div>
+
+      {/* Actions · réserver et partager, aucune commission */}
+      <div className="flex flex-wrap items-center gap-2 px-5 pb-5">
+        <a
+          href={trainUrl(criteria, dest)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rounded-full bg-maree px-4 py-2 text-xs font-semibold text-white transition-transform hover:scale-[1.03] active:scale-[0.97]"
+        >
+          Réserver le train ↗
+        </a>
+        <a
+          href={bookingUrl(criteria, dest)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rounded-full border border-line px-4 py-2 text-xs font-semibold text-inksoft transition-colors hover:border-maree hover:text-ink"
+        >
+          Hôtels ↗
+        </a>
+        <a
+          href={hostelUrl(dest)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rounded-full border border-line px-4 py-2 text-xs font-semibold text-inksoft transition-colors hover:border-maree hover:text-ink"
+        >
+          Auberges ↗
+        </a>
+        <button
+          type="button"
+          onClick={share}
+          aria-label="Partager cette recherche"
+          className="ml-auto rounded-full border border-line px-4 py-2 text-xs font-semibold text-inksoft transition-colors hover:border-corail hover:text-corail"
+        >
+          {copied ? "Lien copié ✓" : "Partager"}
+        </button>
       </div>
     </motion.article>
   );

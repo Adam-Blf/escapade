@@ -96,6 +96,18 @@ export function TicketCard({
                 live
               </span>
             )}
+            {quote?.climateAvgMaxC != null && (
+              <span
+                className="ml-2 rounded bg-sable/40 px-1.5 py-0.5 text-[10px] font-bold text-ink"
+                title={
+                  quote.climateRainyDaysPct != null
+                    ? `Normale saisonnière · ${quote.climateRainyDaysPct}% de jours pluvieux`
+                    : "Normale saisonnière"
+                }
+              >
+                {quote.climateAvgMaxC}°C
+              </span>
+            )}
           </p>
         </div>
         {fit && (

@@ -101,4 +101,7 @@ export interface PriceQuote {
   hotelNightlyDuo: number | null;
   hotelName: string | null;
   hotelLive: boolean;
+  /** Normale climatique du mois demandé (Open-Meteo, gratuit, sans clé) */
+  climateAvgMaxC: number | null;
+  climateRainyDaysPct: number | null;
 }

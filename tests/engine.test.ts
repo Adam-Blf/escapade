@@ -29,6 +29,7 @@ const base: Criteria = {
   profile: null,
   vibes: [],
   month: null,
+  startDate: null,
   nights: 4,
 };
 

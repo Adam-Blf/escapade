@@ -27,7 +27,18 @@ export function CriteriaForm({
   const [profile, setProfile] = useState("");
   const [vibes, setVibes] = useState<Vibe[]>(["mer"]);
   const [month, setMonth] = useState<number | null>(8);
+  const [startDate, setStartDate] = useState("");
   const [nights, setNights] = useState(4);
+  const todayISO = new Date().toISOString().slice(0, 10);
+
+  const onMonthChange = (v: string) => {
+    setMonth(v ? Number(v) : null);
+    setStartDate(""); // le mois redevient flexible, la date précise ne tient plus
+  };
+  const onDateChange = (v: string) => {
+    setStartDate(v);
+    if (v) setMonth(new Date(`${v}T00:00:00`).getMonth() + 1);
+  };
 
   const toggleVibe = (v: Vibe) =>
     setVibes((prev) => (prev.includes(v) ? prev.filter((x) => x !== v) : [...prev, v]));
@@ -44,6 +55,7 @@ export function CriteriaForm({
           profile: profile.trim() || null,
           vibes,
           month,
+          startDate: startDate || null,
           nights,
         });
       }}
@@ -114,7 +126,7 @@ export function CriteriaForm({
           <select
             id="month"
             value={month ?? ""}
-            onChange={(e) => setMonth(e.target.value ? Number(e.target.value) : null)}
+            onChange={(e) => onMonthChange(e.target.value)}
             className="w-full rounded-lg border border-line bg-card px-3 py-2 text-sm"
           >
             <option value="">Flexible</option>
@@ -125,6 +137,23 @@ export function CriteriaForm({
             ))}
           </select>
         </div>
+      </div>
+
+      <div>
+        <label htmlFor="start-date" className="mb-1 block text-sm font-semibold">
+          Date de départ précise <span className="font-normal text-inksoft">(optionnel)</span>
+        </label>
+        <input
+          id="start-date"
+          type="date"
+          min={todayISO}
+          value={startDate}
+          onChange={(e) => onDateChange(e.target.value)}
+          className="w-full rounded-lg border border-line bg-card px-3 py-2 text-sm"
+        />
+        <p className="mt-1 text-xs text-inksoft">
+          Remplace le mois pour les durées et prix en direct. Laisse vide si tu es flexible.
+        </p>
       </div>
 
       <div>

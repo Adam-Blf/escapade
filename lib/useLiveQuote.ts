@@ -10,8 +10,8 @@ import type { Criteria, PriceQuote } from "./types";
  * d'anciens critères n'est jamais montré pour les nouveaux.
  */
 export function useLiveQuote(slug: string, criteria: Criteria): PriceQuote | null {
-  const { origin, month, nights } = criteria;
-  const key = `${slug}|${origin}|${month ?? "x"}|${nights}`;
+  const { origin, month, nights, startDate } = criteria;
+  const key = `${slug}|${origin}|${month ?? "x"}|${nights}|${startDate ?? "x"}`;
   const [state, setState] = useState<{ key: string; quote: PriceQuote } | null>(null);
 
   useEffect(() => {
@@ -22,6 +22,7 @@ export function useLiveQuote(slug: string, criteria: Criteria): PriceQuote | nul
       nights: String(nights),
     });
     if (month !== null) params.set("month", String(month));
+    if (startDate !== null) params.set("startDate", startDate);
     fetch(`/api/prices?${params.toString()}`)
       .then((res) => (res.ok ? res.json() : null))
       .then((data: PriceQuote | null) => {
@@ -33,7 +34,7 @@ export function useLiveQuote(slug: string, criteria: Criteria): PriceQuote | nul
     return () => {
       cancelled = true;
     };
-  }, [slug, origin, month, nights, key]);
+  }, [slug, origin, month, nights, startDate, key]);
 
   return state && state.key === key ? state.quote : null;
 }

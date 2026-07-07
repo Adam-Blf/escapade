@@ -25,6 +25,8 @@ export interface Criteria {
   profile: string | null;
   vibes: Vibe[];
   month: number | null;
+  /** Date de départ exacte (AAAA-MM-JJ), si connue. Prime sur `month` pour les calculs. */
+  startDate: string | null;
   nights: number;
 }
 

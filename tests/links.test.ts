@@ -10,6 +10,7 @@ const criteria: Criteria = {
   profile: null,
   vibes: ["mer"],
   month: 9,
+  startDate: null,
   nights: 4,
 };
 
@@ -18,9 +19,9 @@ const etretat = destinations.find((d) => d.slug === "etretat")!;
 describe("liens de réservation", () => {
   it("trainline · slugs origine et destination, accents retirés", () => {
     expect(trainUrl(criteria, etretat)).toBe(
-      "https://www.thetrainline.com/fr/horaires-des-trains/paris-a-etretat"
+      "https://www.thetrainline.com/en/train-times/paris-to-etretat"
     );
-    expect(trainUrl({ ...criteria, origin: "lyon" }, etretat)).toContain("/lyon-a-");
+    expect(trainUrl({ ...criteria, origin: "lyon" }, etretat)).toContain("/lyon-to-");
   });
 
   it("booking · ville, dates et voyageurs pré-remplis", () => {
@@ -36,6 +37,14 @@ describe("liens de réservation", () => {
     expect(url.searchParams.get("group_adults")).toBe("2");
   });
 
+  it("booking · une date précise prime sur le mois", () => {
+    const url = new URL(
+      bookingUrl({ ...criteria, startDate: "2027-03-10" }, etretat)
+    );
+    expect(url.searchParams.get("checkin")).toBe("2027-03-10");
+    expect(url.searchParams.get("checkout")).toBe("2027-03-14");
+  });
+
   it("hostelworld · recherche ville", () => {
     expect(hostelUrl(etretat)).toContain("hostelworld.com");
     expect(hostelUrl(etretat)).toContain(encodeURIComponent("Étretat, France"));
@@ -43,6 +52,6 @@ describe("liens de réservation", () => {
 
   it("les noms composés donnent des slugs propres", () => {
     const deauville = destinations.find((d) => d.slug === "deauville")!;
-    expect(trainUrl(criteria, deauville)).toContain("paris-a-deauville-trouville");
+    expect(trainUrl(criteria, deauville)).toContain("paris-to-deauville-trouville");
   });
 });

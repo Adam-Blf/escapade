@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { destinations } from "@/lib/destinations";
 import { isOriginSlug, DEFAULT_ORIGIN } from "@/lib/origins";
 import { DestinationBudget } from "@/components/DestinationBudget";
+import { DisruptionBanner } from "@/components/DisruptionBanner";
 
 const MONTH_NAMES = [
   "janv.", "févr.", "mars", "avril", "mai", "juin",
@@ -49,6 +50,8 @@ export default async function DestinationPage({
   const nights = Number.isInteger(n) && n >= 1 && n <= 14 ? n : 4;
   const t = Number(sp.t);
   const travelers = Number.isInteger(t) && t >= 1 && t <= 8 ? t : null;
+  const m = Number(sp.m);
+  const month = Number.isInteger(m) && m >= 1 && m <= 12 ? m : null;
 
   return (
     <main className="mx-auto w-full max-w-6xl px-5 pb-24">
@@ -60,6 +63,10 @@ export default async function DestinationPage({
           ← Retour à la recherche
         </Link>
       </nav>
+
+      <div className="pt-6">
+        <DisruptionBanner destSlug={dest.slug} origin={o} month={month} />
+      </div>
 
       {/* Hero */}
       <header className="grid gap-6 pt-8 md:grid-cols-2 md:items-end">

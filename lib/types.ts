@@ -1,6 +1,17 @@
 export type Vibe = "mer" | "montagne" | "ville" | "lac";
 
+export type OriginSlug = "paris" | "lyon" | "lille" | "marseille" | "bordeaux";
+
+export interface Origin {
+  slug: OriginSlug;
+  name: string;
+  /** Code affiché sur le billet (PAR, LYS...) */
+  code: string;
+  station: string;
+}
+
 export interface Criteria {
+  origin: OriginSlug;
   budget: number | null;
   /** null = configuration libre, on affiche solo et à deux */
   travelers: number | null;
@@ -11,6 +22,13 @@ export interface Criteria {
   nights: number;
 }
 
+export interface TransportOption {
+  label: string;
+  duration: string;
+  priceAR: number;
+  note?: string;
+}
+
 export interface Destination {
   slug: string;
   name: string;
@@ -18,12 +36,8 @@ export interface Destination {
   region: string;
   vibes: Vibe[];
   tagline: string;
-  transport: {
-    label: string;
-    duration: string;
-    priceAR: number;
-    note?: string;
-  };
+  /** Transport aller-retour par ville de départ. Absent = liaison non proposée. */
+  transports: Partial<Record<OriginSlug, TransportOption>>;
   lodging: {
     /** lit en dortoir / emplacement camping, par personne et par nuit */
     dorm: number;
@@ -56,6 +70,8 @@ export type BudgetFit = "ok" | "tight" | "over";
 
 export interface Result {
   dest: Destination;
+  /** Le transport retenu pour l'origine demandée */
+  transport: TransportOption;
   est: Estimate;
   score: number;
   fit: BudgetFit | null;
@@ -63,6 +79,7 @@ export interface Result {
 
 export interface PriceQuote {
   dest: string;
+  origin: OriginSlug;
   transportAR: number;
   source: string;
   live: boolean;

@@ -17,8 +17,8 @@ export default function Home() {
       <footer className="border-t border-line">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-1 px-5 py-6 text-xs text-inksoft">
           <p>
-            Photos : Wikipédia / Wikimedia Commons. Prix indicatifs calculés pour un départ
-            de Paris, sans valeur contractuelle.
+            Photos : Wikipédia / Wikimedia Commons. Prix indicatifs calculés pour la ville
+            de départ choisie, sans valeur contractuelle.
           </p>
           <p>Escapade v0.1.0</p>
         </div>

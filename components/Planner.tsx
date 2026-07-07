@@ -4,7 +4,8 @@ import { useState } from "react";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { parseText } from "@/lib/parse";
 import { rank } from "@/lib/engine";
-import type { Criteria, Result } from "@/lib/types";
+import { DEFAULT_ORIGIN, ORIGINS, getOrigin } from "@/lib/origins";
+import type { Criteria, OriginSlug, Result } from "@/lib/types";
 import { CriteriaForm } from "./CriteriaForm";
 import { TicketCard } from "./TicketCard";
 
@@ -23,6 +24,7 @@ const MONTH_NAMES = [
 
 function criteriaChips(c: Criteria): string[] {
   const chips: string[] = [];
+  chips.push(`départ ${getOrigin(c.origin).name}`);
   if (c.vibes.length) chips.push(c.vibes.join(" + "));
   if (c.budget !== null) chips.push(`budget ${c.budget}€`);
   chips.push(c.travelers === 1 ? "solo" : c.travelers === 2 ? "à deux" : "solo ou à deux");
@@ -33,6 +35,7 @@ function criteriaChips(c: Criteria): string[] {
 
 export function Planner() {
   const [mode, setMode] = useState<Mode>("texte");
+  const [origin, setOrigin] = useState<OriginSlug>(DEFAULT_ORIGIN);
   const [text, setText] = useState("");
   const [applied, setApplied] = useState<Criteria | null>(null);
   const [results, setResults] = useState<Result[] | null>(null);
@@ -40,6 +43,9 @@ export function Planner() {
   const search = (c: Criteria) => {
     setApplied(c);
     setResults(rank(c));
+    // le texte peut imposer sa propre origine ("depuis Lyon") : on
+    // resynchronise le sélecteur pour que l'UI reste cohérente
+    if (c.origin !== origin) setOrigin(c.origin);
   };
 
   return (
@@ -53,7 +59,7 @@ export function Planner() {
           className="pb-10 pt-16 sm:pt-24"
         >
           <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.35em] text-maree">
-            Départ Paris, toutes gares
+            Départ {getOrigin(origin).name}, {getOrigin(origin).station}
           </p>
           <h1 className="max-w-3xl font-display text-5xl font-extrabold leading-[1.02] tracking-tight sm:text-7xl">
             Dis ton envie.
@@ -73,10 +79,31 @@ export function Planner() {
           transition={{ duration: 0.5, delay: 0.15 }}
           className="rounded-3xl border border-line bg-card p-6 shadow-[0_4px_30px_rgba(16,34,43,0.08)] sm:p-8"
         >
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <label
+                htmlFor="origin"
+                className="font-mono text-xs font-semibold uppercase tracking-widest text-inksoft"
+              >
+                Départ
+              </label>
+              <select
+                id="origin"
+                value={origin}
+                onChange={(e) => setOrigin(e.target.value as OriginSlug)}
+                className="rounded-lg border border-line bg-card px-3 py-2 text-sm font-semibold"
+              >
+                {ORIGINS.map((o) => (
+                  <option key={o.slug} value={o.slug}>
+                    {o.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           <div
             role="tablist"
             aria-label="Mode de recherche"
-            className="mb-6 inline-flex rounded-full border border-line bg-paper p-1"
+            className="inline-flex rounded-full border border-line bg-paper p-1"
           >
             {(
               [
@@ -104,6 +131,7 @@ export function Planner() {
               </button>
             ))}
           </div>
+          </div>
 
           <AnimatePresence mode="wait">
             {mode === "texte" ? (
@@ -117,7 +145,7 @@ export function Planner() {
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
-                    if (text.trim()) search(parseText(text));
+                    if (text.trim()) search(parseText(text, origin));
                   }}
                   className="flex flex-col gap-4"
                 >
@@ -162,7 +190,7 @@ export function Planner() {
                 exit={{ opacity: 0, x: -12 }}
                 transition={{ duration: 0.2 }}
               >
-                <CriteriaForm onSearch={search} />
+                <CriteriaForm origin={origin} onSearch={search} />
               </motion.div>
             )}
           </AnimatePresence>

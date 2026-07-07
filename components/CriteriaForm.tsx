@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Criteria, Vibe } from "@/lib/types";
+import type { Criteria, OriginSlug, Vibe } from "@/lib/types";
 
 const VIBES: Array<{ id: Vibe; label: string }> = [
   { id: "mer", label: "Mer" },
@@ -15,7 +15,13 @@ const MONTHS = [
   "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre",
 ];
 
-export function CriteriaForm({ onSearch }: { onSearch: (c: Criteria) => void }) {
+export function CriteriaForm({
+  origin,
+  onSearch,
+}: {
+  origin: OriginSlug;
+  onSearch: (c: Criteria) => void;
+}) {
   const [budget, setBudget] = useState(300);
   const [travelers, setTravelers] = useState<number | null>(null);
   const [profile, setProfile] = useState("");
@@ -32,6 +38,7 @@ export function CriteriaForm({ onSearch }: { onSearch: (c: Criteria) => void }) 
       onSubmit={(e) => {
         e.preventDefault();
         onSearch({
+          origin,
           budget,
           travelers,
           profile: profile.trim() || null,

@@ -1,20 +1,28 @@
 import { destinations } from "./destinations";
-import type { Criteria, Destination, Estimate, Result } from "./types";
+import type {
+  Criteria,
+  Destination,
+  Estimate,
+  OriginSlug,
+  Result,
+  TransportOption,
+} from "./types";
 
 const ACTIVITIES = 25;
 
 export function estimate(
   dest: Destination,
   nights: number,
-  travelers: number | null
+  travelers: number | null,
+  transport: TransportOption
 ): Estimate {
   const days = nights + 1;
-  const transport = dest.transport.priceAR;
+  const transportAR = transport.priceAR;
   const lodgingSolo = nights * dest.lodging.dorm;
   const lodgingDuo = Math.round((nights * dest.lodging.duo) / 2);
   const food = days * dest.foodPerDay;
-  const totalSolo = transport + lodgingSolo + food + ACTIVITIES;
-  const totalDuo = transport + lodgingDuo + food + ACTIVITIES;
+  const totalSolo = transportAR + lodgingSolo + food + ACTIVITIES;
+  const totalDuo = transportAR + lodgingDuo + food + ACTIVITIES;
 
   // À partir de 2 : on retient la formule la moins chère par personne
   // (dortoir ou chambres partagées)
@@ -26,7 +34,7 @@ export function estimate(
   }
 
   return {
-    transport,
+    transport: transportAR,
     food,
     activities: ACTIVITIES,
     totalSolo,
@@ -38,9 +46,15 @@ export function estimate(
   };
 }
 
+/** Destinations desservies depuis une origine (exclut la ville de départ elle-même). */
+export function reachableFrom(origin: OriginSlug): Destination[] {
+  return destinations.filter((d) => d.slug !== origin && d.transports[origin]);
+}
+
 export function rank(criteria: Criteria, limit = 6): Result[] {
-  const results: Result[] = destinations.map((dest) => {
-    const est = estimate(dest, criteria.nights, criteria.travelers);
+  const results: Result[] = reachableFrom(criteria.origin).map((dest) => {
+    const transport = dest.transports[criteria.origin]!;
+    const est = estimate(dest, criteria.nights, criteria.travelers, transport);
     let score = 0;
 
     if (criteria.vibes.length > 0) {
@@ -69,7 +83,7 @@ export function rank(criteria: Criteria, limit = 6): Result[] {
       score += 1;
     }
 
-    return { dest, est, score, fit };
+    return { dest, transport, est, score, fit };
   });
 
   return results

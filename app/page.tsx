@@ -1,5 +1,6 @@
 import { Planner } from "@/components/Planner";
 import { DonateButton } from "@/components/DonateButton";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { APP_VERSION } from "@/lib/version";
 
 export default function Home() {
@@ -10,7 +11,10 @@ export default function Home() {
         <p className="hidden flex-1 font-mono text-xs text-inksoft sm:block">
           planificateur de vacances, budget honnête
         </p>
-        <DonateButton />
+        <div className="flex items-center gap-2">
+          <DonateButton />
+          <ThemeToggle />
+        </div>
       </header>
 
       <main className="flex-1">

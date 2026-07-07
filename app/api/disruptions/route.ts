@@ -3,8 +3,20 @@ import { destinations } from "@/lib/destinations";
 import { resolveCheckin } from "@/lib/dates";
 import { DEFAULT_ORIGIN, getOrigin, isOriginSlug } from "@/lib/origins";
 import { activeDisruptions, navitiaAvailable } from "@/lib/providers/navitia";
+import { checkRateLimit, clientIp } from "@/lib/rateLimit";
+
+const RATE_LIMIT = 20;
+const RATE_WINDOW_MS = 60_000;
 
 export async function GET(request: Request) {
+  const rate = checkRateLimit(`disruptions:${clientIp(request)}`, RATE_LIMIT, RATE_WINDOW_MS);
+  if (!rate.allowed) {
+    return NextResponse.json(
+      { error: "Trop de requêtes, réessaie dans quelques secondes" },
+      { status: 429, headers: { "Retry-After": String(Math.ceil((rate.retryAfterMs ?? 0) / 1000)) } }
+    );
+  }
+
   const { searchParams } = new URL(request.url);
   const destSlug = searchParams.get("dest");
   const originParam = searchParams.get("origin") ?? DEFAULT_ORIGIN;

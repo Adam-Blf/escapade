@@ -82,7 +82,7 @@ export function TicketCard({
 
   // Rafraîchi côté serveur : durée réelle (Navitia) + hôtel le moins cher
   // (Amadeus). Sans clés API le devis revient identique au catalogue.
-  const quote = useLiveQuote(dest.slug, criteria);
+  const { quote, isLoading } = useLiveQuote(dest.slug, criteria);
   const duration = quote?.liveDuration ?? transport.duration;
   const liveLodgingDuo =
     quote?.hotelNightlyDuo != null
@@ -113,22 +113,31 @@ export function TicketCard({
           <p className="font-mono text-xs font-semibold tracking-[0.2em] text-white">
             {originCode} <span aria-hidden>――――▸</span> {dest.code}
             <span className="ml-3 opacity-80">{duration}</span>
-            {quote?.liveDuration && (
-              <span className="ml-2 rounded bg-maree/30 px-1.5 py-0.5 text-[10px] font-bold uppercase text-white">
-                live
-              </span>
-            )}
-            {quote?.climateAvgMaxC != null && (
+            {isLoading ? (
               <span
-                className="ml-2 rounded bg-sable/40 px-1.5 py-0.5 text-[10px] font-bold text-ink"
-                title={
-                  quote.climateRainyDaysPct != null
-                    ? `Normale saisonnière · ${quote.climateRainyDaysPct}% de jours pluvieux`
-                    : "Normale saisonnière"
-                }
-              >
-                {quote.climateAvgMaxC}°C
-              </span>
+                aria-hidden
+                className="ml-2 inline-block h-4 w-14 animate-pulse rounded bg-white/20 align-middle"
+              />
+            ) : (
+              <>
+                {quote?.liveDuration && (
+                  <span className="ml-2 rounded bg-maree/30 px-1.5 py-0.5 text-[10px] font-bold uppercase text-white">
+                    live
+                  </span>
+                )}
+                {quote?.climateAvgMaxC != null && (
+                  <span
+                    className="ml-2 rounded bg-sable/40 px-1.5 py-0.5 text-[10px] font-bold text-ink"
+                    title={
+                      quote.climateRainyDaysPct != null
+                        ? `Normale saisonnière · ${quote.climateRainyDaysPct}% de jours pluvieux`
+                        : "Normale saisonnière"
+                    }
+                  >
+                    {quote.climateAvgMaxC}°C
+                  </span>
+                )}
+              </>
             )}
           </p>
         </div>
@@ -204,10 +213,17 @@ export function TicketCard({
           <div>
             <p className="font-mono text-[11px] uppercase tracking-widest text-inksoft">
               À 2, par pers.
-              {liveTotalDuo != null && (
-                <span className="ml-1.5 rounded bg-maree/15 px-1.5 py-0.5 text-[10px] font-bold text-maree">
-                  hôtel live
-                </span>
+              {isLoading ? (
+                <span
+                  aria-hidden
+                  className="ml-1.5 inline-block h-4 w-16 animate-pulse rounded bg-maree/10 align-middle"
+                />
+              ) : (
+                liveTotalDuo != null && (
+                  <span className="ml-1.5 rounded bg-maree/15 px-1.5 py-0.5 text-[10px] font-bold text-maree">
+                    hôtel live
+                  </span>
+                )
               )}
             </p>
             <p className="font-display text-3xl font-bold text-maree">

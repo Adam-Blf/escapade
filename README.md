@@ -7,12 +7,13 @@
 [![top language](https://img.shields.io/github/languages/top/Adam-Blf/escapade?style=flat-square)](https://github.com/Adam-Blf/escapade)
 [![license](https://img.shields.io/github/license/Adam-Blf/escapade?style=flat-square&color=D4A437)](LICENSE)
 <!-- adam-badges:end -->
-![version](https://img.shields.io/badge/version-0.3.0-001329?style=flat-square)
+![version](https://img.shields.io/badge/version-0.4.0-001329?style=flat-square)
 
 Planificateur de vacances au départ de Paris, Lyon, Lille, Marseille ou
 Bordeaux, pensé pour les budgets étudiants. Décris ton envie en une phrase
 ("pas riche mais envie de voir la mer, 300€, fin août, seule ou à 2") ou coche
-tes critères : Escapade classe 18 destinations françaises et calcule le
+tes critères : Escapade classe 24 destinations (France + Europe proche
+en train direct) et calcule le
 budget réel, solo et à deux, avec des prix qui se rafraîchissent en direct
 quand c'est possible.
 
@@ -48,8 +49,11 @@ une clé gratuite, elle enrichit l'affichage.
 - [x] Mode critères : sliders, chips d'envies, sélecteur de ville de départ
 - [x] Moteur de scoring : fit budget (ok / juste / au-dessus), envies,
       saisonnalité, signaux de groupe
-- [x] 5 villes de départ × 18 destinations, matrice de transport dédiée par
-      liaison
+- [x] 5 villes de départ × 24 destinations (18 françaises + Barcelone,
+      Bruxelles, Amsterdam, Londres, Genève, Milan), matrice de transport
+      dédiée par liaison
+- [x] Date de départ exacte (en plus du mois flexible), parsée aussi en
+      langage naturel ("le 12 août", "05/09")
 - [x] Prix temps réel best-effort (durée Navitia, hôtel Amadeus) avec repli
       catalogue transparent
 - [x] Recherche partageable par URL, dernières recherches en local

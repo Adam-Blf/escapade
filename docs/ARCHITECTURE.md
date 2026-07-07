@@ -10,7 +10,7 @@ n'orchestre que le routing et le rendu serveur.
 lib/            source de vérité, testée en isolation (tests/*.test.ts)
   ├─ types.ts         types partagés (Criteria, Destination, Result, PriceQuote...)
   ├─ origins.ts        villes de départ desservies (paris|lyon|lille|marseille|bordeaux)
-  ├─ destinations.ts    catalogue des 18 destinations, matrice de transport par origine
+  ├─ destinations.ts    catalogue des 24 destinations (France + Europe proche), matrice de transport par origine
   ├─ activities.ts      activités curatées par destination
   ├─ engine.ts          estimate() + rank() : scoring pur, sans effet de bord
   ├─ parse.ts           texte libre FR → Criteria (regex, aucun appel réseau)

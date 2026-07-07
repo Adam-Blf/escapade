@@ -126,6 +126,43 @@ export const activities: Record<string, Activity[]> = {
     { name: "Gand ou Bruges en train (journée)", price: 20, vibe: "ville" },
     { name: "Estaminet · welsh et bière locale", price: 15 },
   ],
+  barcelone: [
+    { name: "Plage de la Barceloneta", price: 0, vibe: "mer" },
+    { name: "Parc Güell (zone gratuite)", price: 0, vibe: "ville" },
+    { name: "Marché de la Boqueria", price: 0 },
+    { name: "Sagrada Família (billet)", price: 26, vibe: "ville" },
+    { name: "Bunkers del Carmel (vue gratuite)", price: 0, vibe: "ville" },
+  ],
+  bruxelles: [
+    { name: "Grand-Place", price: 0, vibe: "ville" },
+    { name: "Marché aux puces Jeu de Balle", price: 0 },
+    { name: "Musée de la BD", price: 12, vibe: "ville" },
+    { name: "Dégustation frites et gaufre", price: 6 },
+  ],
+  amsterdam: [
+    { name: "Vondelpark", price: 0, vibe: "ville" },
+    { name: "Marché Albert Cuyp", price: 0 },
+    { name: "Vélo le long des canaux (location)", price: 12, vibe: "ville" },
+    { name: "Rijksmuseum", price: 22.5, vibe: "ville" },
+  ],
+  londres: [
+    { name: "British Museum (entrée gratuite)", price: 0, vibe: "ville" },
+    { name: "Camden Market", price: 0, vibe: "ville" },
+    { name: "South Bank et Tower Bridge à pied", price: 0, vibe: "ville" },
+    { name: "London Eye", price: 30, vibe: "ville" },
+  ],
+  geneve: [
+    { name: "Jet d'eau et jardin anglais", price: 0, vibe: "lac" },
+    { name: "Vieille Ville", price: 0, vibe: "ville" },
+    { name: "Baignade bain des Eaux-Vives", price: 0, vibe: "lac" },
+    { name: "Mont Salève (téléphérique AR)", price: 24, vibe: "montagne" },
+  ],
+  milan: [
+    { name: "Quartier des Navigli à l'apéro", price: 0, vibe: "ville" },
+    { name: "Cour du Château des Sforza", price: 0, vibe: "ville" },
+    { name: "Terrasses du Duomo", price: 14, vibe: "ville" },
+    { name: "Pinacothèque de Brera", price: 15, vibe: "ville" },
+  ],
   strasbourg: [
     { name: "Petite France et ponts couverts", price: 0, vibe: "ville" },
     { name: "Plateforme de la cathédrale", price: 8, vibe: "ville" },

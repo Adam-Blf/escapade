@@ -8,9 +8,11 @@ import { parseSignals, tipsFor } from "@/lib/profile";
 import { DEFAULT_ORIGIN, ORIGINS, getOrigin } from "@/lib/origins";
 import { criteriaFromParams, criteriaToParams } from "@/lib/share";
 import { loadRecent, saveRecent, type RecentSearch } from "@/lib/recent";
+import { MAX_COMPARE, canCompare, selectedResults, toggleCompare } from "@/lib/compare";
 import type { Criteria, OriginSlug, Result } from "@/lib/types";
 import { CriteriaForm } from "./CriteriaForm";
 import { TicketCard } from "./TicketCard";
+import { Comparator } from "./Comparator";
 
 type Mode = "texte" | "criteres";
 
@@ -43,10 +45,13 @@ export function Planner() {
   const [applied, setApplied] = useState<Criteria | null>(null);
   const [results, setResults] = useState<Result[] | null>(null);
   const [recent, setRecent] = useState<RecentSearch[]>([]);
+  const [compared, setCompared] = useState<string[]>([]);
+  const [comparatorOpen, setComparatorOpen] = useState(false);
 
   const apply = (c: Criteria) => {
     setApplied(c);
     setResults(rank(c));
+    setCompared([]);
     // le texte peut imposer sa propre origine ("depuis Lyon") : on
     // resynchronise le sélecteur pour que l'UI reste cohérente
     setOrigin(c.origin);
@@ -279,13 +284,46 @@ export function Planner() {
             )}
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {results.map((r, i) => (
-                <TicketCard key={r.dest.slug} result={r} criteria={applied} index={i} />
+                <TicketCard
+                  key={r.dest.slug}
+                  result={r}
+                  criteria={applied}
+                  index={i}
+                  compareSelected={compared.includes(r.dest.slug)}
+                  compareDisabled={
+                    !compared.includes(r.dest.slug) && compared.length >= MAX_COMPARE
+                  }
+                  onToggleCompare={(slug) => setCompared((prev) => toggleCompare(prev, slug))}
+                />
               ))}
             </div>
             <p className="mt-8 text-xs text-inksoft">
               Prix indicatifs (résa anticipée, tarifs jeunes inclus quand ils existent),
               à vérifier sur SNCF Connect / Ouigo avant de réserver.
             </p>
+
+            {/* Barre flottante de comparaison */}
+            <AnimatePresence>
+              {canCompare(compared) && !comparatorOpen && (
+                <motion.button
+                  type="button"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  onClick={() => setComparatorOpen(true)}
+                  className="fixed bottom-6 left-1/2 z-40 -translate-x-1/2 rounded-full bg-ink px-6 py-3 font-display text-sm font-bold text-white shadow-[0_8px_30px_rgba(16,34,43,0.3)]"
+                >
+                  Comparer {compared.length} destination{compared.length > 1 ? "s" : ""}
+                </motion.button>
+              )}
+            </AnimatePresence>
+
+            <Comparator
+              results={comparatorOpen ? selectedResults(results, compared) : []}
+              criteria={applied}
+              onRemove={(slug) => setCompared((prev) => prev.filter((s) => s !== slug))}
+              onClose={() => setComparatorOpen(false)}
+            />
           </div>
         )}
       </section>

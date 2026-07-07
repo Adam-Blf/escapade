@@ -11,6 +11,9 @@ export async function GET(request: Request) {
   const nights = Number.isFinite(nightsParam) && nightsParam >= 1
     ? Math.min(14, nightsParam)
     : 4;
+  const startDateParam = searchParams.get("startDate");
+  const startDate =
+    startDateParam && /^\d{4}-\d{2}-\d{2}$/.test(startDateParam) ? startDateParam : null;
 
   if (!dest) {
     return NextResponse.json({ error: "Paramètre dest manquant" }, { status: 400 });
@@ -19,7 +22,13 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Origine inconnue" }, { status: 400 });
   }
 
-  const quote = await getQuote(dest, originParam, month ? Number(month) : null, nights);
+  const quote = await getQuote(
+    dest,
+    originParam,
+    month ? Number(month) : null,
+    nights,
+    startDate
+  );
   if (!quote) {
     return NextResponse.json(
       { error: "Destination inconnue ou liaison non proposée" },

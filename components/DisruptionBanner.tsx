@@ -12,10 +12,12 @@ export function DisruptionBanner({
   destSlug,
   origin,
   month,
+  startDate,
 }: {
   destSlug: string;
   origin: OriginSlug;
   month: number | null;
+  startDate: string | null;
 }) {
   const [disruptions, setDisruptions] = useState<string[]>([]);
 
@@ -23,6 +25,7 @@ export function DisruptionBanner({
     let cancelled = false;
     const params = new URLSearchParams({ dest: destSlug, origin });
     if (month !== null) params.set("month", String(month));
+    if (startDate !== null) params.set("startDate", startDate);
     fetch(`/api/disruptions?${params.toString()}`)
       .then((res) => (res.ok ? res.json() : null))
       .then((data: { disruptions?: string[] } | null) => {
@@ -34,7 +37,7 @@ export function DisruptionBanner({
     return () => {
       cancelled = true;
     };
-  }, [destSlug, origin, month]);
+  }, [destSlug, origin, month, startDate]);
 
   if (disruptions.length === 0) return null;
 

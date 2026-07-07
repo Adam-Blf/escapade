@@ -1,4 +1,4 @@
-import { addNights, checkinDate, toISODate } from "./dates";
+import { addNights, resolveCheckin, toISODate } from "./dates";
 import { getOrigin } from "./origins";
 import { criteriaToParams } from "./share";
 import type { Criteria, Destination } from "./types";
@@ -18,16 +18,20 @@ function citySlug(name: string): string {
     .replace(/^-|-$/g, "");
 }
 
-/** Page horaires Trainline origine → destination (pattern SEO stable). */
+/**
+ * Page horaires Trainline origine → destination. Pattern vérifié manuellement
+ * (`/fr/horaires-des-trains/...` répond 404, la seule structure stable est
+ * `/en/train-times/{from}-to-{to}` — testé sur plusieurs liaisons du catalogue).
+ */
 export function trainUrl(criteria: Criteria, dest: Destination): string {
   const from = citySlug(getOrigin(criteria.origin).name);
   const to = citySlug(dest.name);
-  return `https://www.thetrainline.com/fr/horaires-des-trains/${from}-a-${to}`;
+  return `https://www.thetrainline.com/en/train-times/${from}-to-${to}`;
 }
 
 /** Recherche Booking pré-remplie ville + dates + 2 adultes. */
 export function bookingUrl(criteria: Criteria, dest: Destination): string {
-  const checkin = checkinDate(criteria.month);
+  const checkin = resolveCheckin(criteria.startDate, criteria.month);
   const checkout = addNights(checkin, criteria.nights);
   const params = new URLSearchParams({
     ss: `${dest.name}, France`,

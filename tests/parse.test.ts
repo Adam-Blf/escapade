@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { parseText } from "@/lib/parse";
+import { DEFAULT_ORIGIN } from "@/lib/origins";
 
 describe("parseText · budget", () => {
   it("lit un montant suivi de €", () => {
@@ -129,6 +130,38 @@ describe("parseText · origine", () => {
 
   it("le texte gagne sur le fallback", () => {
     expect(parseText("depuis lyon, la mer", "lille").origin).toBe("lyon");
+  });
+});
+
+describe("parseText · date exacte", () => {
+  const now = new Date("2027-01-10T12:00:00Z");
+
+  it("« le 12 août » → date ISO + mois cohérent", () => {
+    const c = parseText("le 12 août, envie de mer", DEFAULT_ORIGIN, now);
+    expect(c.startDate).toBe("2027-08-12");
+    expect(c.month).toBe(8);
+  });
+
+  it("format JJ/MM", () => {
+    const c = parseText("départ le 05/09", DEFAULT_ORIGIN, now);
+    expect(c.startDate).toBe("2027-09-05");
+    expect(c.month).toBe(9);
+  });
+
+  it("bascule sur l'année suivante si la date est déjà passée", () => {
+    const c = parseText("le 3 janvier", DEFAULT_ORIGIN, now);
+    // 3 janvier 2027 est déjà passé (now = 10 janvier 2027) → 2028
+    expect(c.startDate).toBe("2028-01-03");
+  });
+
+  it("sans date exacte, startDate reste null", () => {
+    expect(parseText("envie de mer en août", DEFAULT_ORIGIN, now).startDate).toBeNull();
+  });
+
+  it("la date exacte est prioritaire sur un nom de mois isolé ailleurs dans la phrase", () => {
+    const c = parseText("le 12 août, pas en septembre", DEFAULT_ORIGIN, now);
+    expect(c.month).toBe(8);
+    expect(c.startDate).toBe("2027-08-12");
   });
 });
 

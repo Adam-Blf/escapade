@@ -125,7 +125,7 @@ export function TicketCard({
             <Link
               href={`/destination/${dest.slug}?o=${criteria.origin}&n=${criteria.nights}${
                 criteria.travelers !== null ? `&t=${criteria.travelers}` : ""
-              }`}
+              }${criteria.startDate !== null ? `&d=${criteria.startDate}` : ""}`}
               className="transition-colors hover:text-maree"
             >
               {dest.name}

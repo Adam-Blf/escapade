@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { destinations } from "@/lib/destinations";
-import { checkinDate } from "@/lib/dates";
+import { resolveCheckin } from "@/lib/dates";
 import { DEFAULT_ORIGIN, getOrigin, isOriginSlug } from "@/lib/origins";
 import { activeDisruptions, navitiaAvailable } from "@/lib/providers/navitia";
 
@@ -9,6 +9,9 @@ export async function GET(request: Request) {
   const destSlug = searchParams.get("dest");
   const originParam = searchParams.get("origin") ?? DEFAULT_ORIGIN;
   const month = searchParams.get("month");
+  const startDateParam = searchParams.get("startDate");
+  const startDate =
+    startDateParam && /^\d{4}-\d{2}-\d{2}$/.test(startDateParam) ? startDateParam : null;
 
   if (!destSlug) {
     return NextResponse.json({ error: "Paramètre dest manquant" }, { status: 400 });
@@ -28,7 +31,7 @@ export async function GET(request: Request) {
     );
   }
 
-  const checkin = checkinDate(month ? Number(month) : null);
+  const checkin = resolveCheckin(startDate, month ? Number(month) : null);
   const disruptions = await activeDisruptions(getOrigin(originParam).coords, dest.coords, checkin);
 
   return NextResponse.json(

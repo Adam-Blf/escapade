@@ -52,6 +52,8 @@ export default async function DestinationPage({
   const travelers = Number.isInteger(t) && t >= 1 && t <= 8 ? t : null;
   const m = Number(sp.m);
   const month = Number.isInteger(m) && m >= 1 && m <= 12 ? m : null;
+  const startDate =
+    typeof sp.d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(sp.d) ? sp.d : null;
 
   return (
     <main className="mx-auto w-full max-w-6xl px-5 pb-24">
@@ -65,7 +67,7 @@ export default async function DestinationPage({
       </nav>
 
       <div className="pt-6">
-        <DisruptionBanner destSlug={dest.slug} origin={o} month={month} />
+        <DisruptionBanner destSlug={dest.slug} origin={o} month={month} startDate={startDate} />
       </div>
 
       {/* Hero */}

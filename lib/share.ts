@@ -3,10 +3,16 @@ import type { Criteria, Vibe } from "./types";
 
 const VIBES: Vibe[] = ["mer", "montagne", "ville", "lac"];
 const MAX_PROFILE_CHARS = 200;
+const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+function isValidIsoDate(s: string): boolean {
+  if (!ISO_DATE_RE.test(s)) return false;
+  return !Number.isNaN(new Date(`${s}T00:00:00Z`).getTime());
+}
 
 /**
  * Critères ↔ query string, pour des recherches partageables par lien.
- * Clés courtes : o=origine b=budget t=voyageurs v=vibes m=mois n=nuits p=profil.
+ * Clés courtes : o=origine b=budget t=voyageurs v=vibes m=mois d=date n=nuits p=profil.
  */
 export function criteriaToParams(c: Criteria): URLSearchParams {
   const params = new URLSearchParams();
@@ -15,6 +21,7 @@ export function criteriaToParams(c: Criteria): URLSearchParams {
   if (c.travelers !== null) params.set("t", String(c.travelers));
   if (c.vibes.length > 0) params.set("v", c.vibes.join(","));
   if (c.month !== null) params.set("m", String(c.month));
+  if (c.startDate !== null) params.set("d", c.startDate);
   params.set("n", String(c.nights));
   if (c.profile) params.set("p", c.profile.slice(0, MAX_PROFILE_CHARS));
   return params;
@@ -46,5 +53,8 @@ export function criteriaFromParams(params: URLSearchParams): Criteria | null {
 
   const profile = params.get("p")?.slice(0, MAX_PROFILE_CHARS).trim() || null;
 
-  return { origin, budget, travelers, profile, vibes, month, nights };
+  const dParam = params.get("d");
+  const startDate = dParam && isValidIsoDate(dParam) ? dParam : null;
+
+  return { origin, budget, travelers, profile, vibes, month, startDate, nights };
 }

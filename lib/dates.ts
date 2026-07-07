@@ -17,6 +17,23 @@ export function checkinDate(month: number | null, now = new Date()): Date {
   return new Date(Date.UTC(year, month - 1, 15));
 }
 
+/**
+ * Date de check-in effective : la date exacte si l'utilisateur l'a saisie,
+ * sinon dérivée du mois (voir checkinDate). `startDate` invalide est ignorée
+ * plutôt que de faire planter le calcul.
+ */
+export function resolveCheckin(
+  startDate: string | null,
+  month: number | null,
+  now = new Date()
+): Date {
+  if (startDate) {
+    const d = new Date(`${startDate}T00:00:00Z`);
+    if (!Number.isNaN(d.getTime())) return d;
+  }
+  return checkinDate(month, now);
+}
+
 export function addNights(checkin: Date, nights: number): Date {
   const d = new Date(checkin);
   d.setDate(d.getDate() + nights);

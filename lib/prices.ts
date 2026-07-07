@@ -1,6 +1,6 @@
 import { destinations } from "./destinations";
 import { getOrigin } from "./origins";
-import { addNights, checkinDate, toISODate } from "./dates";
+import { addNights, resolveCheckin, toISODate } from "./dates";
 import { amadeusAvailable, cheapestDouble } from "./providers/amadeus";
 import { bestJourneyDuration, navitiaAvailable } from "./providers/navitia";
 import { climateNormal } from "./providers/openmeteo";
@@ -25,13 +25,14 @@ export async function getQuote(
   slug: string,
   origin: OriginSlug,
   month: number | null,
-  nights = 4
+  nights = 4,
+  startDate: string | null = null
 ): Promise<PriceQuote | null> {
   const dest = destinations.find((d) => d.slug === slug);
   const transport = dest?.transports[origin];
   if (!dest || !transport) return null;
 
-  const key = `${slug}|${origin}|${month ?? "x"}|${nights}`;
+  const key = `${slug}|${origin}|${month ?? "x"}|${nights}|${startDate ?? "x"}`;
   const hit = cache.get(key);
   if (hit && Date.now() - hit.at < CACHE_TTL_MS) return hit.quote;
 
@@ -49,7 +50,7 @@ export async function getQuote(
     climateRainyDaysPct: null,
   };
 
-  const checkin = checkinDate(month);
+  const checkin = resolveCheckin(startDate, month);
   const checkout = addNights(checkin, nights);
 
   const [duration, hotel, climate] = await Promise.allSettled([

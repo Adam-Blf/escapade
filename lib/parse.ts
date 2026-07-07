@@ -25,6 +25,42 @@ const SEASONS: Array<[RegExp, number]> = [
   [/\bhiver(nal)?\b/, 12],
 ];
 
+/** Prochaine occurrence de ce jour/mois : cette année si pas encore passée, sinon l'an prochain. */
+function resolveYear(month: number, day: number, now: Date): number {
+  const y = now.getFullYear();
+  return new Date(Date.UTC(y, month - 1, day)).getTime() < now.getTime() ? y + 1 : y;
+}
+
+function isoDate(year: number, month: number, day: number): string {
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}
+
+/**
+ * Date exacte si mentionnée ("le 12 août", "à partir du 5/09"), sinon null.
+ * Prioritaire sur le simple nom de mois : plus l'utilisateur est précis,
+ * plus on doit l'être en retour (durées Navitia, hôtel Amadeus...).
+ */
+function parseExplicitDate(t: string, now: Date): { date: string; month: number } | null {
+  const slash = t.match(/\b(\d{1,2})\/(\d{1,2})\b/);
+  if (slash) {
+    const day = parseInt(slash[1], 10);
+    const month = parseInt(slash[2], 10);
+    if (day >= 1 && day <= 31 && month >= 1 && month <= 12) {
+      return { date: isoDate(resolveYear(month, day, now), month, day), month };
+    }
+  }
+  for (const [name, num] of Object.entries(MONTHS)) {
+    const m = t.match(new RegExp(`\\b(\\d{1,2})\\s+${name}\\b`));
+    if (m) {
+      const day = parseInt(m[1], 10);
+      if (day >= 1 && day <= 31) {
+        return { date: isoDate(resolveYear(num, day, now), num, day), month: num };
+      }
+    }
+  }
+  return null;
+}
+
 function normalize(text: string): string {
   return text
     .toLowerCase()
@@ -44,7 +80,11 @@ function parseOrigin(t: string): OriginSlug | null {
   return m ? (m[1] as OriginSlug) : null;
 }
 
-export function parseText(input: string, fallbackOrigin: OriginSlug = DEFAULT_ORIGIN): Criteria {
+export function parseText(
+  input: string,
+  fallbackOrigin: OriginSlug = DEFAULT_ORIGIN,
+  now: Date = new Date()
+): Criteria {
   const t = normalize(input);
 
   const origin = parseOrigin(t) ?? fallbackOrigin;
@@ -73,14 +113,22 @@ export function parseText(input: string, fallbackOrigin: OriginSlug = DEFAULT_OR
   // Vibes
   const vibes = VIBE_PATTERNS.filter(([, re]) => re.test(t)).map(([v]) => v);
 
-  // Mois (\b obligatoire : "mais" contient "mai")
+  // Date exacte ("le 12 août", "12/09") > nom de mois > saison
+  // (\b obligatoire sur le mois : "mais" contient "mai")
   let month: number | null = null;
-  for (const [name, num] of Object.entries(MONTHS)) {
-    if (new RegExp(`\\b${name}\\b`).test(t)) { month = num; break; }
-  }
-  if (month === null) {
-    for (const [re, num] of SEASONS) {
-      if (re.test(t)) { month = num; break; }
+  let startDate: string | null = null;
+  const explicit = parseExplicitDate(t, now);
+  if (explicit) {
+    month = explicit.month;
+    startDate = explicit.date;
+  } else {
+    for (const [name, num] of Object.entries(MONTHS)) {
+      if (new RegExp(`\\b${name}\\b`).test(t)) { month = num; break; }
+    }
+    if (month === null) {
+      for (const [re, num] of SEASONS) {
+        if (re.test(t)) { month = num; break; }
+      }
     }
   }
 
@@ -100,5 +148,5 @@ export function parseText(input: string, fallbackOrigin: OriginSlug = DEFAULT_OR
   // En mode texte, la phrase entière sert de description du groupe
   const profile = /etudiant|enfant|famille|copine|copain|ami/.test(t) ? input.trim() : null;
 
-  return { origin, budget, travelers, profile, vibes, month, nights };
+  return { origin, budget, travelers, profile, vibes, month, startDate, nights };
 }

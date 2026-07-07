@@ -7,7 +7,7 @@
 [![top language](https://img.shields.io/github/languages/top/Adam-Blf/escapade?style=flat-square)](https://github.com/Adam-Blf/escapade)
 [![license](https://img.shields.io/github/license/Adam-Blf/escapade?style=flat-square&color=D4A437)](LICENSE)
 <!-- adam-badges:end -->
-![version](https://img.shields.io/badge/version-0.2.0-001329?style=flat-square)
+![version](https://img.shields.io/badge/version-0.3.0-001329?style=flat-square)
 
 Planificateur de vacances au départ de Paris, Lyon, Lille, Marseille ou
 Bordeaux, pensé pour les budgets étudiants. Décris ton envie en une phrase
@@ -35,6 +35,10 @@ une clé gratuite, elle enrichit l'affichage.
 - **Don** · bouton de soutien optionnel via un Payment Link Stripe (aucun
   coût fixe, aucun backend). Masqué si `NEXT_PUBLIC_STRIPE_DONATION_URL`
   n'est pas défini.
+- **Icônes / OG / PWA** · générées dynamiquement au build via `next/og`
+  (`app/icon.tsx`, `app/opengraph-image.tsx`...), zéro asset binaire à
+  maintenir.
+- **Analytics** · Vercel Analytics, gratuit sur le plan hobby.
 
 ## Features
 
@@ -52,7 +56,14 @@ une clé gratuite, elle enrichit l'affichage.
 - [x] Tickets actionnables : réservation train / hôtel / auberge, partage
 - [x] Pages détail par destination avec budget interactif et activités
       curatées (au moins une gratuite par destination)
-- [x] Dark mode, reduced motion respecté, animations framer-motion
+- [x] Comparateur de 2 à 3 destinations côte à côte
+- [x] Don optionnel via Payment Link Stripe (zéro backend, masqué si non
+      configuré)
+- [x] SEO complet (metadata, sitemap, robots, OG/icônes générées au build),
+      PWA installable, Vercel Analytics
+- [x] Dark mode manuel (bascule persistée, gagne sur la préférence système,
+      zéro flash) en plus du support `prefers-color-scheme`, reduced motion
+      respecté, animations framer-motion
 
 ## Stack
 

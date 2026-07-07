@@ -3,6 +3,20 @@
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 Versions alignées sur `package.json`.
 
+## 0.3.0
+
+- Comparateur : sélection de 2 à 3 destinations depuis les résultats,
+  affichées côte à côte (budget, transport, mois, highlights).
+- Don optionnel via Payment Link Stripe (`DonateButton`, zéro backend,
+  masqué si `NEXT_PUBLIC_STRIPE_DONATION_URL` n'est pas configuré) et page
+  `/soutenir`.
+- SEO complet : metadata (title template, OpenGraph, Twitter card),
+  `sitemap.ts`, `robots.ts`, icônes/OG générées dynamiquement via `next/og`
+  (zéro asset binaire). Manifest PWA installable. Vercel Analytics.
+- Dark mode manuel : bascule persistée (localStorage) qui gagne sur
+  `prefers-color-scheme` dans les deux sens, script anti-flash exécuté
+  avant le premier paint.
+
 ## 0.2.0
 
 - Pages détail par destination (`/destination/[slug]`) avec budget interactif

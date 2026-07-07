@@ -11,10 +11,18 @@ const NUMBER_WORDS: Record<string, number> = {
 };
 
 const VIBE_PATTERNS: Array<[Vibe, RegExp]> = [
-  ["mer", /\b(mer|plage|ocean|littoral|cote|bord de mer|bronzer|baignade|falaise)s?\b/],
-  ["montagne", /\b(montagne|rando|randonnee|alpes|pyrenees|sommet|refuge|grimper)s?\b/],
-  ["ville", /\b(ville|citytrip|city trip|musee|culture|urbain|expo)s?\b/],
+  ["mer", /\b(mer|plage|ocean|littoral|cote|bord de mer|bronzer|baignade|falaise|surf|calanque|crique|maree)s?\b/],
+  ["montagne", /\b(montagne|rando|randonnee|alpes|pyrenees|vosges|sommet|refuge|grimper|alpage|treks?)s?\b/],
+  ["ville", /\b(ville|citytrip|city trip|musee|culture|urbain|expo|shopping|architecture)s?\b/],
   ["lac", /\blacs?\b/],
+];
+
+/** Saison → mois représentatif, si aucun mois explicite. */
+const SEASONS: Array<[RegExp, number]> = [
+  [/\b(cet )?ete\b|\bestival/, 7],
+  [/\bprintemps\b/, 5],
+  [/\bautomne\b/, 10],
+  [/\bhiver(nal)?\b/, 12],
 ];
 
 function normalize(text: string): string {
@@ -70,6 +78,11 @@ export function parseText(input: string, fallbackOrigin: OriginSlug = DEFAULT_OR
   for (const [name, num] of Object.entries(MONTHS)) {
     if (new RegExp(`\\b${name}\\b`).test(t)) { month = num; break; }
   }
+  if (month === null) {
+    for (const [re, num] of SEASONS) {
+      if (re.test(t)) { month = num; break; }
+    }
+  }
 
   // Durée : nuits explicites > jours > semaine > week-end.
   // "2 dernieres semaines d'aout" ne matche pas (mot entre le chiffre et "semaines").
@@ -80,6 +93,7 @@ export function parseText(input: string, fallbackOrigin: OriginSlug = DEFAULT_OR
   else if (daysMatch) nights = Math.max(1, parseInt(daysMatch[1], 10) - 1);
   else if (/\b(?:une|1)\s+semaine\b/.test(t) || /\bquinze jours\b/.test(t)) nights = 6;
   else if (/\b(?:deux|2)\s+semaines\b/.test(t)) nights = 13;
+  else if (/long week[- ]?end/.test(t)) nights = 3;
   else if (/week[- ]?end/.test(t)) nights = 2;
   nights = Math.min(14, Math.max(1, nights));
 

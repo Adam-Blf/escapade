@@ -1,4 +1,5 @@
 import { destinations } from "./destinations";
+import { hoursOf, parseSignals, signalScore } from "./profile";
 import type {
   Criteria,
   Destination,
@@ -52,6 +53,7 @@ export function reachableFrom(origin: OriginSlug): Destination[] {
 }
 
 export function rank(criteria: Criteria, limit = 6): Result[] {
+  const signals = parseSignals(criteria.profile);
   const results: Result[] = reachableFrom(criteria.origin).map((dest) => {
     const transport = dest.transports[criteria.origin]!;
     const est = estimate(dest, criteria.nights, criteria.travelers, transport);
@@ -82,6 +84,8 @@ export function rank(criteria: Criteria, limit = 6): Result[] {
     if (criteria.month !== null && dest.bestMonths.includes(criteria.month)) {
       score += 1;
     }
+
+    score += signalScore(signals, dest.vibes, hoursOf(transport.duration));
 
     return { dest, transport, est, score, fit };
   });

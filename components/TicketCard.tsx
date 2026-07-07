@@ -15,6 +15,28 @@ const FIT_LABEL = {
   over: { text: "Au-dessus du budget", cls: "bg-corail/15 text-corail" },
 } as const;
 
+/** Numéro de billet stable (pas aléatoire) façon carte d'embarquement, purement décoratif. */
+function ticketCode(seed: string): string {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+  return h.toString(36).toUpperCase().padStart(6, "0").slice(0, 6);
+}
+
+/** Bandeau code-barres purement décoratif (motif fixe, pas de vraie donnée encodée). */
+function Barcode({ className = "" }: { className?: string }) {
+  return (
+    <div
+      aria-hidden
+      className={`h-8 ${className}`}
+      style={{
+        backgroundImage:
+          "repeating-linear-gradient(90deg, currentColor 0px, currentColor 2px, transparent 2px, transparent 4px, currentColor 4px, currentColor 5px, transparent 5px, transparent 9px, currentColor 9px, currentColor 11px, transparent 11px, transparent 13px, currentColor 13px, currentColor 14px, transparent 14px, transparent 17px)",
+        backgroundRepeat: "repeat-x",
+      }}
+    />
+  );
+}
+
 export function TicketCard({
   result,
   criteria,
@@ -150,7 +172,17 @@ export function TicketCard({
         </ul>
       </div>
 
-      {/* Ligne perforée du billet */}
+      {/* Souche façon carte d'embarquement : perforation, code-barres, n° de billet */}
+      <div className="relative mx-0 border-t-2 border-dashed border-line">
+        <span aria-hidden className="absolute -left-3 -top-3 h-6 w-6 rounded-full bg-paper" />
+        <span aria-hidden className="absolute -right-3 -top-3 h-6 w-6 rounded-full bg-paper" />
+      </div>
+      <div className="flex items-center gap-3 px-5 pt-3 text-inksoft/70">
+        <Barcode className="flex-1" />
+        <span className="whitespace-nowrap font-mono text-[10px] tracking-widest">
+          N° {originCode}{dest.code}-{ticketCode(`${dest.slug}|${criteria.origin}`)}
+        </span>
+      </div>
       <div className="relative mx-0 border-t-2 border-dashed border-line">
         <span aria-hidden className="absolute -left-3 -top-3 h-6 w-6 rounded-full bg-paper" />
         <span aria-hidden className="absolute -right-3 -top-3 h-6 w-6 rounded-full bg-paper" />

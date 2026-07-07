@@ -5,6 +5,10 @@ const MONTHS: Record<string, number> = {
   juillet: 7, aout: 8, septembre: 9, octobre: 10, novembre: 11, decembre: 12,
 };
 
+const NUMBER_WORDS: Record<string, number> = {
+  deux: 2, trois: 3, quatre: 4, cinq: 5, six: 6, sept: 7, huit: 8,
+};
+
 const VIBE_PATTERNS: Array<[Vibe, RegExp]> = [
   ["mer", /\b(mer|plage|ocean|littoral|cote|bord de mer|bronzer|baignade|falaise)s?\b/],
   ["montagne", /\b(montagne|rando|randonnee|alpes|pyrenees|sommet|refuge|grimper)s?\b/],
@@ -32,18 +36,23 @@ export function parseText(input: string): Criteria {
     budget = 300;
   }
 
-  // Voyageurs : ambigu ("seule ou à 2") => null, les deux colonnes s'affichent
+  // Voyageurs : nombre explicite ("a 3", "a trois", "nous sommes 4"),
+  // sinon solo / duo. Ambigu ("seule ou a 2") => null, les deux s'affichent.
+  let travelers: Criteria["travelers"] = null;
+  const numDigit = t.match(/\b(?:a|entre|nous sommes|on est)\s+(\d)\b/);
+  const numWord = t.match(/\b(?:a|entre|nous sommes|on est)\s+(deux|trois|quatre|cinq|six|sept|huit)\b/);
   const solo = /\b(seule?|solo|toute seule)\b/.test(t);
-  const duo = /\ba (?:2|deux)\b|\ben couple\b|\bavec (?:ma|mon|une? )/.test(t);
-  const travelers: Criteria["travelers"] = solo && duo ? null : duo ? 2 : solo ? 1 : null;
+  if (numDigit) travelers = Math.min(8, Math.max(1, parseInt(numDigit[1], 10)));
+  else if (numWord) travelers = NUMBER_WORDS[numWord[1]];
+  else if (/\ben couple\b|\bavec (?:ma|mon|une? )/.test(t)) travelers = 2;
+  if (solo) travelers = travelers !== null && travelers > 1 ? null : 1;
 
   // Vibes
   const vibes = VIBE_PATTERNS.filter(([, re]) => re.test(t)).map(([v]) => v);
 
-  // Mois
+  // Mois (\b obligatoire : "mais" contient "mai")
   let month: number | null = null;
   for (const [name, num] of Object.entries(MONTHS)) {
-    // \b obligatoire : "mais" contient "mai"
     if (new RegExp(`\\b${name}\\b`).test(t)) { month = num; break; }
   }
 
@@ -59,5 +68,8 @@ export function parseText(input: string): Criteria {
   else if (/week[- ]?end/.test(t)) nights = 2;
   nights = Math.min(14, Math.max(1, nights));
 
-  return { budget, travelers, vibes, month, nights };
+  // En mode texte, la phrase entière sert de description du groupe
+  const profile = /etudiant|enfant|famille|copine|copain|ami/.test(t) ? input.trim() : null;
+
+  return { budget, travelers, profile, vibes, month, nights };
 }

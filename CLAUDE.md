@@ -22,7 +22,8 @@ Aucune dépendance payante, jamais. Toute intégration externe suit le pattern
 
 ```
 lib/types.ts        source de vérité des types (Criteria, Destination, Result…)
-lib/destinations.ts catalogue 18 destinations × 5 origines (matrice transports)
+lib/destinations.ts catalogue 24 destinations × 5 origines (matrice transports,
+                    18 françaises + Europe proche en train direct)
 lib/origins.ts      villes de départ (paris|lyon|lille|marseille|bordeaux)
 lib/engine.ts       estimate() + rank() · scoring pur, testable sans DOM
 lib/parse.ts        texte libre FR → Criteria (regex, pas de LLM · gratuit)

@@ -3,6 +3,21 @@
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 Versions alignées sur `package.json`.
 
+## 0.4.0
+
+- Europe proche : 6 nouvelles destinations accessibles en train direct depuis
+  les 5 villes de départ existantes (Barcelone, Bruxelles, Amsterdam,
+  Londres, Genève, Milan), même architecture zéro-coût. Catalogue à 24
+  destinations.
+- Date de départ exacte, en plus du mois flexible : sélecteur de date dans
+  le mode critères, parsing en langage naturel ("le 12 août", "05/09"),
+  utilisée pour affiner les durées Navitia, le prix hôtel Amadeus, la
+  météo Open-Meteo et les perturbations SNCF.
+- Style billet d'embarquement : code-barres décoratif et numéro de billet
+  stable sur chaque ticket.
+- Correction : le lien de réservation Trainline pointait vers une URL
+  invalide (404) ; remplacé par le pattern réel vérifié manuellement.
+
 ## 0.3.0
 
 - Comparateur : sélection de 2 à 3 destinations depuis les résultats,

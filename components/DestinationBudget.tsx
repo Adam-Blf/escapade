@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { estimate } from "@/lib/engine";
 import { ORIGINS, getOrigin } from "@/lib/origins";
 import { activitiesOf } from "@/lib/activities";
+import { co2Comparison, co2SavedVsCar, haversineKm } from "@/lib/co2";
 import type { Destination, OriginSlug } from "@/lib/types";
 
 /**
@@ -44,6 +45,13 @@ export function DestinationBudget({
   const lodging = duo ? est.lodgingDuo : est.lodgingSolo;
   // Le forfait 25€ par défaut est remplacé par la somme des activités choisies
   const total = est.transport + lodging + est.food + (picked.size > 0 ? activityTotal : est.activities);
+
+  const distanceKm = useMemo(
+    () => haversineKm(getOrigin(origin).coords, dest.coords),
+    [origin, dest.coords]
+  );
+  const co2 = useMemo(() => co2Comparison(distanceKm), [distanceKm]);
+  const savedVsCar = useMemo(() => co2SavedVsCar(distanceKm), [distanceKm]);
 
   const toggle = (name: string) =>
     setPicked((prev) => {
@@ -89,6 +97,30 @@ export function DestinationBudget({
           Coche ce qui te tente : le budget à droite se met à jour. Sans sélection,
           on compte un forfait de {est.activities}€.
         </p>
+
+        {/* Impact carbone · calcul 100% local (haversine + facteurs ADEME), aucun appel réseau */}
+        <div className="mt-8 rounded-2xl border border-line bg-card p-5">
+          <h3 className="mb-3 font-display text-lg font-bold">Impact carbone (aller-retour)</h3>
+          <dl className="grid grid-cols-3 gap-3 text-center">
+            <div className="rounded-xl bg-maree/10 py-3">
+              <dt className="text-xs text-inksoft">Train</dt>
+              <dd className="font-mono text-lg font-bold text-maree">{co2.train} kg</dd>
+            </div>
+            <div className="rounded-xl bg-paper py-3">
+              <dt className="text-xs text-inksoft">Voiture</dt>
+              <dd className="font-mono text-lg font-bold">{co2.car} kg</dd>
+            </div>
+            <div className="rounded-xl bg-paper py-3">
+              <dt className="text-xs text-inksoft">Avion</dt>
+              <dd className="font-mono text-lg font-bold">{co2.plane} kg</dd>
+            </div>
+          </dl>
+          <p className="mt-3 text-xs text-inksoft">
+            Le train t&apos;évite ~{savedVsCar.kg} kg de CO2e par rapport à la voiture, soit{" "}
+            {savedVsCar.percent}% en moins. Ordres de grandeur ADEME (Base Carbone), non
+            contractuels.
+          </p>
+        </div>
       </section>
 
       {/* Budget */}

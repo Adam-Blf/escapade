@@ -1,13 +1,15 @@
 import { Planner } from "@/components/Planner";
+import { DonateButton } from "@/components/DonateButton";
 
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 pt-6">
+      <header className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 pt-6">
         <p className="font-mono text-sm font-semibold tracking-[0.4em]">ESCAPADE</p>
-        <p className="hidden font-mono text-xs text-inksoft sm:block">
+        <p className="hidden flex-1 font-mono text-xs text-inksoft sm:block">
           planificateur de vacances, budget honnête
         </p>
+        <DonateButton />
       </header>
 
       <main className="flex-1">

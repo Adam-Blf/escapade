@@ -24,6 +24,30 @@
   }
 }
 
+/* Bascule manuelle (ThemeToggle) : gagne sur la préférence système dans les
+   deux sens, d'où la répétition explicite plutôt qu'un simple :not(). */
+:root[data-theme="light"] {
+  --paper: #edf2ef;
+  --card: #ffffff;
+  --ink: #10222b;
+  --ink-soft: #51666f;
+  --maree: #0e6d68;
+  --corail: #e8402f;
+  --sable: #e8c98f;
+  --line: #cfdbd4;
+}
+
+:root[data-theme="dark"] {
+  --paper: #0c1a20;
+  --card: #13272f;
+  --ink: #e9efea;
+  --ink-soft: #93a8ad;
+  --maree: #2aa39b;
+  --corail: #ff6a5f;
+  --sable: #d8b678;
+  --line: #24404a;
+}
+
 @theme inline {
   --color-paper: var(--paper);
   --color-card: var(--card);
@@ -42,6 +66,7 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-instrument), sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 :focus-visible {

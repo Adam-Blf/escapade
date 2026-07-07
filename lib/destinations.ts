@@ -1,7 +1,9 @@
 import type { Destination } from "./types";
 
-// Prix indicatifs basse saison / résa anticipée, départ Paris, tarifs jeunes
-// quand ils existent (Nomad -26 ans = -50%, Ouigo dès 19€). À vérifier avant résa.
+// Prix indicatifs basse saison / résa anticipée, tarifs jeunes quand ils
+// existent (Nomad -26 ans = -50%, Ouigo dès 19€, TER Zou/Occitanie réduits).
+// Les liaisons longues passent souvent par Paris : durée et prix en tiennent
+// compte. À vérifier avant résa.
 export const destinations: Destination[] = [
   {
     slug: "dieppe",
@@ -10,11 +12,12 @@ export const destinations: Destination[] = [
     region: "Normandie, côte d'Albâtre",
     vibes: ["mer"],
     tagline: "La mer la moins chère de France depuis Paris.",
-    transport: {
-      label: "Train Nomad (Saint-Lazare)",
-      duration: "2h15",
-      priceAR: 20,
-      note: "-50% pour les -26 ans, plein tarif 20,10€ le trajet",
+    transports: {
+      paris: { label: "Train Nomad (Saint-Lazare)", duration: "2h15", priceAR: 20, note: "-50% pour les -26 ans, plein tarif 20,10€ le trajet" },
+      lyon: { label: "TGV + Nomad via Paris", duration: "5h", priceAR: 70 },
+      lille: { label: "TER via Rouen", duration: "4h", priceAR: 48 },
+      marseille: { label: "TGV + Nomad via Paris", duration: "6h30", priceAR: 92 },
+      bordeaux: { label: "TGV + Nomad via Paris", duration: "6h", priceAR: 88 },
     },
     lodging: { dorm: 15, duo: 52 },
     foodPerDay: 15,
@@ -29,11 +32,12 @@ export const destinations: Destination[] = [
     region: "Normandie / Picardie",
     vibes: ["mer"],
     tagline: "Falaises les plus hautes d'Europe, ambiance carte postale.",
-    transport: {
-      label: "Train + car Nomad",
-      duration: "3h",
-      priceAR: 24,
-      note: "via Abancourt ou Dieppe",
+    transports: {
+      paris: { label: "Train + car Nomad", duration: "3h", priceAR: 24, note: "via Abancourt ou Dieppe" },
+      lyon: { label: "TGV + car via Paris", duration: "6h", priceAR: 76 },
+      lille: { label: "TER via Abbeville", duration: "3h", priceAR: 34 },
+      marseille: { label: "TGV + car via Paris", duration: "7h", priceAR: 98 },
+      bordeaux: { label: "TGV + car via Paris", duration: "6h30", priceAR: 94 },
     },
     lodging: { dorm: 16, duo: 55 },
     foodPerDay: 15,
@@ -48,10 +52,12 @@ export const destinations: Destination[] = [
     region: "Normandie",
     vibes: ["mer"],
     tagline: "Les falaises que le monde entier vient voir.",
-    transport: {
-      label: "Train Bréauté + bus",
-      duration: "2h45",
-      priceAR: 32,
+    transports: {
+      paris: { label: "Train Bréauté + bus", duration: "2h45", priceAR: 32 },
+      lyon: { label: "TGV + train via Paris", duration: "5h30", priceAR: 80 },
+      lille: { label: "TER via Rouen + bus", duration: "4h30", priceAR: 54 },
+      marseille: { label: "TGV + train via Paris", duration: "7h", priceAR: 100 },
+      bordeaux: { label: "TGV + train via Paris", duration: "6h30", priceAR: 95 },
     },
     lodging: { dorm: 24, duo: 78 },
     foodPerDay: 17,
@@ -66,11 +72,12 @@ export const destinations: Destination[] = [
     region: "Normandie, Côte Fleurie",
     vibes: ["mer"],
     tagline: "Les Planches à 2h de Paris, version étudiante possible.",
-    transport: {
-      label: "Train Nomad (Saint-Lazare)",
-      duration: "2h05",
-      priceAR: 30,
-      note: "-50% pour les -26 ans",
+    transports: {
+      paris: { label: "Train Nomad (Saint-Lazare)", duration: "2h05", priceAR: 30, note: "-50% pour les -26 ans" },
+      lyon: { label: "TGV + Nomad via Paris", duration: "5h", priceAR: 76 },
+      lille: { label: "TGV + Nomad via Paris", duration: "4h", priceAR: 56 },
+      marseille: { label: "TGV + Nomad via Paris", duration: "6h30", priceAR: 96 },
+      bordeaux: { label: "TGV + Nomad via Paris", duration: "6h", priceAR: 90 },
     },
     lodging: { dorm: 28, duo: 95 },
     foodPerDay: 19,
@@ -85,11 +92,12 @@ export const destinations: Destination[] = [
     region: "Bretagne, Côte d'Émeraude",
     vibes: ["mer"],
     tagline: "Remparts, marées géantes et granit.",
-    transport: {
-      label: "TGV Inoui / Ouigo",
-      duration: "2h30",
-      priceAR: 58,
-      note: "dès 38€ AR en résa anticipée",
+    transports: {
+      paris: { label: "TGV Inoui / Ouigo", duration: "2h30", priceAR: 58, note: "dès 38€ AR en résa anticipée" },
+      lyon: { label: "TGV via Paris ou direct Rennes", duration: "5h", priceAR: 88 },
+      lille: { label: "TGV via Paris", duration: "4h30", priceAR: 78 },
+      marseille: { label: "TGV via Paris", duration: "7h", priceAR: 105 },
+      bordeaux: { label: "TGV via Rennes", duration: "5h", priceAR: 75 },
     },
     lodging: { dorm: 26, duo: 80 },
     foodPerDay: 16,
@@ -104,11 +112,12 @@ export const destinations: Destination[] = [
     region: "Charente-Maritime",
     vibes: ["mer", "ville"],
     tagline: "Vieux-Port, vélo et île de Ré à portée de pédale.",
-    transport: {
-      label: "TGV / Ouigo",
-      duration: "3h",
-      priceAR: 50,
-      note: "Ouigo dès 19€ le trajet",
+    transports: {
+      paris: { label: "TGV / Ouigo", duration: "3h", priceAR: 50, note: "Ouigo dès 19€ le trajet" },
+      lyon: { label: "Intercités via Massif", duration: "4h30", priceAR: 64 },
+      lille: { label: "TGV via Paris", duration: "5h", priceAR: 74 },
+      marseille: { label: "TGV via Paris", duration: "6h", priceAR: 85 },
+      bordeaux: { label: "TER / Intercités", duration: "2h20", priceAR: 30 },
     },
     lodging: { dorm: 25, duo: 75 },
     foodPerDay: 16,
@@ -123,11 +132,12 @@ export const destinations: Destination[] = [
     region: "Pays basque",
     vibes: ["mer"],
     tagline: "Océan, surf et Pays basque.",
-    transport: {
-      label: "TGV / Ouigo",
-      duration: "4h10",
-      priceAR: 70,
-      note: "Ouigo dès 25€ le trajet",
+    transports: {
+      paris: { label: "TGV / Ouigo", duration: "4h10", priceAR: 70, note: "Ouigo dès 25€ le trajet" },
+      lyon: { label: "TGV via Bordeaux", duration: "6h", priceAR: 90 },
+      lille: { label: "TGV via Paris", duration: "6h30", priceAR: 95 },
+      marseille: { label: "Intercités via Toulouse", duration: "7h", priceAR: 88 },
+      bordeaux: { label: "TER / TGV", duration: "2h", priceAR: 28 },
     },
     lodging: { dorm: 30, duo: 95 },
     foodPerDay: 18,
@@ -142,11 +152,11 @@ export const destinations: Destination[] = [
     region: "Provence, Méditerranée",
     vibes: ["mer", "ville"],
     tagline: "Calanques, Vieux-Port et soleil quasi garanti.",
-    transport: {
-      label: "Ouigo",
-      duration: "3h30",
-      priceAR: 44,
-      note: "dès 19€ le trajet en résa anticipée",
+    transports: {
+      paris: { label: "Ouigo", duration: "3h30", priceAR: 44, note: "dès 19€ le trajet en résa anticipée" },
+      lyon: { label: "Ouigo / TGV", duration: "1h45", priceAR: 32, note: "dès 16€ le trajet" },
+      lille: { label: "TGV direct", duration: "4h40", priceAR: 70 },
+      bordeaux: { label: "Intercités direct", duration: "5h30", priceAR: 58 },
     },
     lodging: { dorm: 28, duo: 78 },
     foodPerDay: 16,
@@ -161,10 +171,12 @@ export const destinations: Destination[] = [
     region: "Provence",
     vibes: ["mer"],
     tagline: "Le village des calanques, eau turquoise.",
-    transport: {
-      label: "Ouigo Marseille + TER",
-      duration: "4h",
-      priceAR: 52,
+    transports: {
+      paris: { label: "Ouigo Marseille + TER", duration: "4h", priceAR: 52 },
+      lyon: { label: "TGV Marseille + TER", duration: "2h30", priceAR: 42 },
+      lille: { label: "TGV Marseille + TER", duration: "5h15", priceAR: 78 },
+      marseille: { label: "TER", duration: "25 min", priceAR: 12, note: "puis bus M08 vers le port" },
+      bordeaux: { label: "Intercités Marseille + TER", duration: "6h15", priceAR: 66 },
     },
     lodging: { dorm: 30, duo: 92 },
     foodPerDay: 18,
@@ -179,11 +191,12 @@ export const destinations: Destination[] = [
     region: "Occitanie, Méditerranée",
     vibes: ["mer"],
     tagline: "La Venise du Languedoc, plages de sable infinies.",
-    transport: {
-      label: "Ouigo direct",
-      duration: "3h45",
-      priceAR: 44,
-      note: "dès 19€ le trajet en résa anticipée",
+    transports: {
+      paris: { label: "Ouigo direct", duration: "3h45", priceAR: 44, note: "dès 19€ le trajet en résa anticipée" },
+      lyon: { label: "TER / TGV via Montpellier", duration: "2h45", priceAR: 40 },
+      lille: { label: "TGV via Paris ou Lyon", duration: "5h45", priceAR: 78 },
+      marseille: { label: "TER direct", duration: "2h", priceAR: 28, note: "tarif jeune Occitanie possible" },
+      bordeaux: { label: "Intercités via Toulouse", duration: "4h15", priceAR: 46 },
     },
     lodging: { dorm: 27, duo: 72 },
     foodPerDay: 15,
@@ -198,10 +211,12 @@ export const destinations: Destination[] = [
     region: "Côte Vermeille, Pyrénées-Orientales",
     vibes: ["mer"],
     tagline: "Le village des peintres, entre mer et Pyrénées.",
-    transport: {
-      label: "TGV Perpignan + TER",
-      duration: "5h30",
-      priceAR: 78,
+    transports: {
+      paris: { label: "TGV Perpignan + TER", duration: "5h30", priceAR: 78 },
+      lyon: { label: "TGV Perpignan + TER", duration: "4h", priceAR: 56 },
+      lille: { label: "TGV via Paris + TER", duration: "7h", priceAR: 98 },
+      marseille: { label: "TER via Narbonne", duration: "3h30", priceAR: 42 },
+      bordeaux: { label: "Intercités via Toulouse + TER", duration: "4h45", priceAR: 52 },
     },
     lodging: { dorm: 29, duo: 88 },
     foodPerDay: 17,
@@ -216,11 +231,12 @@ export const destinations: Destination[] = [
     region: "Côte d'Azur",
     vibes: ["mer", "ville"],
     tagline: "La Baie des Anges au tarif Ouigo.",
-    transport: {
-      label: "Ouigo direct",
-      duration: "6h",
-      priceAR: 60,
-      note: "dès 19€ le trajet, le plus long mais le plus dépaysant",
+    transports: {
+      paris: { label: "Ouigo direct", duration: "6h", priceAR: 60, note: "dès 19€ le trajet, le plus long mais le plus dépaysant" },
+      lyon: { label: "TGV direct", duration: "4h30", priceAR: 56 },
+      lille: { label: "TGV via Paris ou Marseille", duration: "7h", priceAR: 88 },
+      marseille: { label: "TER Zou / TGV", duration: "2h40", priceAR: 34, note: "TER Zou à 1€ certains jours d'été" },
+      bordeaux: { label: "TGV via Marseille", duration: "8h", priceAR: 92 },
     },
     lodging: { dorm: 29, duo: 85 },
     foodPerDay: 17,
@@ -235,10 +251,12 @@ export const destinations: Destination[] = [
     region: "Haute-Savoie",
     vibes: ["lac", "montagne"],
     tagline: "Le lac le plus photogénique de France.",
-    transport: {
-      label: "TGV",
-      duration: "3h50",
-      priceAR: 60,
+    transports: {
+      paris: { label: "TGV", duration: "3h50", priceAR: 60 },
+      lyon: { label: "TER direct", duration: "2h", priceAR: 26 },
+      lille: { label: "TGV via Paris ou Lyon", duration: "5h30", priceAR: 82 },
+      marseille: { label: "TGV Lyon + TER", duration: "4h", priceAR: 54 },
+      bordeaux: { label: "TGV via Paris ou Lyon", duration: "6h30", priceAR: 92 },
     },
     lodging: { dorm: 28, duo: 85 },
     foodPerDay: 17,
@@ -253,10 +271,12 @@ export const destinations: Destination[] = [
     region: "Vosges",
     vibes: ["lac", "montagne"],
     tagline: "Lac, forêts et fraîcheur vosgienne, budget mini.",
-    transport: {
-      label: "TER Remiremont + bus",
-      duration: "3h30",
-      priceAR: 40,
+    transports: {
+      paris: { label: "TER Remiremont + bus", duration: "3h30", priceAR: 40 },
+      lyon: { label: "TER via Besançon + bus", duration: "4h30", priceAR: 54 },
+      lille: { label: "TGV Nancy + TER + bus", duration: "5h", priceAR: 64 },
+      marseille: { label: "TGV via Lyon + TER + bus", duration: "7h", priceAR: 88 },
+      bordeaux: { label: "TGV via Paris + TER + bus", duration: "7h30", priceAR: 96 },
     },
     lodging: { dorm: 20, duo: 58 },
     foodPerDay: 14,
@@ -271,10 +291,12 @@ export const destinations: Destination[] = [
     region: "Mont-Blanc",
     vibes: ["montagne"],
     tagline: "La haute montagne accessible en train.",
-    transport: {
-      label: "TGV + Mont-Blanc Express",
-      duration: "5h",
-      priceAR: 70,
+    transports: {
+      paris: { label: "TGV + Mont-Blanc Express", duration: "5h", priceAR: 70 },
+      lyon: { label: "TER St-Gervais + Mont-Blanc Express", duration: "4h", priceAR: 44 },
+      lille: { label: "TGV via Paris + Express", duration: "6h30", priceAR: 92 },
+      marseille: { label: "TGV Lyon + TER + Express", duration: "5h30", priceAR: 66 },
+      bordeaux: { label: "TGV via Paris + Express", duration: "7h30", priceAR: 100 },
     },
     lodging: { dorm: 30, duo: 90 },
     foodPerDay: 17,
@@ -289,11 +311,11 @@ export const destinations: Destination[] = [
     region: "Rhône",
     vibes: ["ville"],
     tagline: "Capitale de la bouche, à 2h et 30€.",
-    transport: {
-      label: "Ouigo",
-      duration: "2h",
-      priceAR: 30,
-      note: "dès 16€ le trajet",
+    transports: {
+      paris: { label: "Ouigo", duration: "2h", priceAR: 30, note: "dès 16€ le trajet" },
+      lille: { label: "TGV direct", duration: "3h", priceAR: 58 },
+      marseille: { label: "Ouigo / TGV", duration: "1h45", priceAR: 32 },
+      bordeaux: { label: "Intercités via Massif ou TGV", duration: "6h", priceAR: 72 },
     },
     lodging: { dorm: 24, duo: 70 },
     foodPerDay: 17,
@@ -308,11 +330,11 @@ export const destinations: Destination[] = [
     region: "Hauts-de-France",
     vibes: ["ville"],
     tagline: "Week-end flamand à 1h de Paris.",
-    transport: {
-      label: "TGV / Ouigo",
-      duration: "1h05",
-      priceAR: 25,
-      note: "dès 10€ le trajet en Ouigo",
+    transports: {
+      paris: { label: "TGV / Ouigo", duration: "1h05", priceAR: 25, note: "dès 10€ le trajet en Ouigo" },
+      lyon: { label: "TGV direct", duration: "3h", priceAR: 58 },
+      marseille: { label: "TGV direct", duration: "4h40", priceAR: 70 },
+      bordeaux: { label: "TGV direct", duration: "5h", priceAR: 82 },
     },
     lodging: { dorm: 23, duo: 65 },
     foodPerDay: 15,
@@ -327,11 +349,12 @@ export const destinations: Destination[] = [
     region: "Alsace",
     vibes: ["ville"],
     tagline: "La Petite France, colombages et vélo partout.",
-    transport: {
-      label: "TGV / Ouigo",
-      duration: "1h50",
-      priceAR: 30,
-      note: "dès 16€ le trajet",
+    transports: {
+      paris: { label: "TGV / Ouigo", duration: "1h50", priceAR: 30, note: "dès 16€ le trajet" },
+      lyon: { label: "TGV direct", duration: "3h40", priceAR: 54 },
+      lille: { label: "TGV direct", duration: "3h50", priceAR: 62 },
+      marseille: { label: "TGV direct", duration: "5h30", priceAR: 78 },
+      bordeaux: { label: "TGV via Paris", duration: "6h", priceAR: 94 },
     },
     lodging: { dorm: 25, duo: 72 },
     foodPerDay: 16,

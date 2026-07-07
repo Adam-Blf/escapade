@@ -1,4 +1,5 @@
-import type { Criteria, Vibe } from "./types";
+import { DEFAULT_ORIGIN } from "./origins";
+import type { Criteria, OriginSlug, Vibe } from "./types";
 
 const MONTHS: Record<string, number> = {
   janvier: 1, fevrier: 2, mars: 3, avril: 4, mai: 5, juin: 6,
@@ -23,8 +24,22 @@ function normalize(text: string): string {
     .replace(/[̀-ͯ]/g, "");
 }
 
-export function parseText(input: string): Criteria {
+/**
+ * Ville de départ mentionnée dans le texte ("depuis Lyon", "je pars de Lille",
+ * "au départ de Marseille"). Un simple nom de ville sans marqueur de départ ne
+ * suffit pas : "envie de voir Lyon" est une destination, pas une origine.
+ */
+function parseOrigin(t: string): OriginSlug | null {
+  const m = t.match(
+    /\b(?:depuis|au depart de|je pars de|on part de|j'habite (?:a|vers)?|de chez moi a)\s+(paris|lyon|lille|marseille|bordeaux)\b/
+  );
+  return m ? (m[1] as OriginSlug) : null;
+}
+
+export function parseText(input: string, fallbackOrigin: OriginSlug = DEFAULT_ORIGIN): Criteria {
   const t = normalize(input);
+
+  const origin = parseOrigin(t) ?? fallbackOrigin;
 
   // Budget : "300€", "300 euros", "budget de 300"
   let budget: number | null = null;
@@ -71,5 +86,5 @@ export function parseText(input: string): Criteria {
   // En mode texte, la phrase entière sert de description du groupe
   const profile = /etudiant|enfant|famille|copine|copain|ami/.test(t) ? input.trim() : null;
 
-  return { budget, travelers, profile, vibes, month, nights };
+  return { origin, budget, travelers, profile, vibes, month, nights };
 }

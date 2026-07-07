@@ -108,6 +108,30 @@ describe("parseText · nuits", () => {
   });
 });
 
+describe("parseText · origine", () => {
+  it("défaut paris", () => {
+    expect(parseText("envie de mer").origin).toBe("paris");
+  });
+
+  it("détecte « depuis Lyon », « je pars de Lille »", () => {
+    expect(parseText("la mer depuis lyon").origin).toBe("lyon");
+    expect(parseText("je pars de Lille ce week-end").origin).toBe("lille");
+    expect(parseText("au départ de Bordeaux, 300€").origin).toBe("bordeaux");
+  });
+
+  it("un nom de ville sans marqueur reste une destination", () => {
+    expect(parseText("j'aimerais visiter Lyon").origin).toBe("paris");
+  });
+
+  it("le fallback (sélecteur UI) est utilisé si le texte ne précise rien", () => {
+    expect(parseText("envie de mer", "marseille").origin).toBe("marseille");
+  });
+
+  it("le texte gagne sur le fallback", () => {
+    expect(parseText("depuis lyon, la mer", "lille").origin).toBe("lyon");
+  });
+});
+
 describe("parseText · profil", () => {
   it("capture la phrase quand elle décrit le groupe", () => {
     const input = "deux étudiantes fauchées, envie de mer";

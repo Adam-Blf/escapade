@@ -1,5 +1,5 @@
 import { destinations } from "./destinations";
-import type { PriceQuote } from "./types";
+import type { OriginSlug, PriceQuote } from "./types";
 
 /**
  * Chaîne de providers de prix transport.
@@ -9,7 +9,11 @@ import type { PriceQuote } from "./types";
 interface PriceProvider {
   name: string;
   available: () => boolean;
-  quote: (slug: string, month: number | null) => Promise<PriceQuote | null>;
+  quote: (
+    slug: string,
+    origin: OriginSlug,
+    month: number | null
+  ) => Promise<PriceQuote | null>;
 }
 
 /**
@@ -46,12 +50,14 @@ const amadeusProvider: PriceProvider = {
 const staticProvider: PriceProvider = {
   name: "catalogue",
   available: () => true,
-  quote: async (slug) => {
+  quote: async (slug, origin) => {
     const dest = destinations.find((d) => d.slug === slug);
-    if (!dest) return null;
+    const transport = dest?.transports[origin];
+    if (!dest || !transport) return null;
     return {
       dest: slug,
-      transportAR: dest.transport.priceAR,
+      origin,
+      transportAR: transport.priceAR,
       source: "catalogue",
       live: false,
     };
@@ -62,12 +68,13 @@ const providers: PriceProvider[] = [navitiaProvider, amadeusProvider, staticProv
 
 export async function getQuote(
   slug: string,
+  origin: OriginSlug,
   month: number | null
 ): Promise<PriceQuote | null> {
   for (const provider of providers) {
     if (!provider.available()) continue;
     try {
-      const quote = await provider.quote(slug, month);
+      const quote = await provider.quote(slug, origin, month);
       if (quote) return quote;
     } catch {
       // provider en panne : on passe au suivant

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { getOrigin } from "@/lib/origins";
 import type { Criteria, Result } from "@/lib/types";
 
 const FIT_LABEL = {
@@ -19,7 +20,8 @@ export function TicketCard({
   criteria: Criteria;
   index: number;
 }) {
-  const { dest, est, fit } = result;
+  const { dest, transport, est, fit } = result;
+  const originCode = getOrigin(criteria.origin).code;
   const showSolo = criteria.travelers !== 2;
   const showDuo = criteria.travelers !== 1;
 
@@ -41,8 +43,8 @@ export function TicketCard({
         />
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/80 to-transparent px-5 pb-3 pt-10">
           <p className="font-mono text-xs font-semibold tracking-[0.2em] text-white">
-            PAR <span aria-hidden>――――▸</span> {dest.code}
-            <span className="ml-3 opacity-80">{dest.transport.duration}</span>
+            {originCode} <span aria-hidden>――――▸</span> {dest.code}
+            <span className="ml-3 opacity-80">{transport.duration}</span>
           </p>
         </div>
         {fit && (
@@ -61,8 +63,8 @@ export function TicketCard({
         </div>
         <p className="text-sm leading-relaxed">{dest.tagline}</p>
         <p className="font-mono text-xs text-inksoft">
-          {dest.transport.label}, ~{dest.transport.priceAR}€ l&apos;aller-retour
-          {dest.transport.note ? ` (${dest.transport.note})` : ""}
+          {transport.label}, ~{transport.priceAR}€ l&apos;aller-retour
+          {transport.note ? ` (${transport.note})` : ""}
         </p>
         <ul className="mt-1 space-y-1 text-sm">
           {dest.highlights.map((h) => (

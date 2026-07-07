@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { estimate, rank } from "@/lib/engine";
+import { estimate, rank, reachableFrom } from "@/lib/engine";
 import { destinations } from "@/lib/destinations";
-import type { Criteria, Destination } from "@/lib/types";
+import { ORIGINS } from "@/lib/origins";
+import type { Criteria, Destination, TransportOption } from "@/lib/types";
+
+const ter: TransportOption = { label: "TER", duration: "2h00", priceAR: 50 };
 
 const dest: Destination = {
   slug: "test-ville",
@@ -10,7 +13,7 @@ const dest: Destination = {
   region: "Testie",
   vibes: ["mer"],
   tagline: "Pour les tests.",
-  transport: { label: "TER", duration: "2h00", priceAR: 50 },
+  transports: { paris: ter },
   lodging: { dorm: 25, duo: 60 },
   foodPerDay: 20,
   highlights: ["Plage de sable"],
@@ -19,6 +22,7 @@ const dest: Destination = {
 };
 
 const base: Criteria = {
+  origin: "paris",
   budget: null,
   travelers: null,
   profile: null,
@@ -29,7 +33,7 @@ const base: Criteria = {
 
 describe("estimate", () => {
   it("additionne transport + dodo + repas + activités (solo)", () => {
-    const est = estimate(dest, 4, 1);
+    const est = estimate(dest, 4, 1, ter);
     // 50 + 4*25 + 5*20 + 25
     expect(est.totalSolo).toBe(275);
     expect(est.lodgingSolo).toBe(100);
@@ -37,20 +41,20 @@ describe("estimate", () => {
   });
 
   it("divise la chambre duo par deux", () => {
-    const est = estimate(dest, 4, 2);
+    const est = estimate(dest, 4, 2, ter);
     // 50 + (4*60)/2 + 5*20 + 25
     expect(est.totalDuo).toBe(295);
     expect(est.lodgingDuo).toBe(120);
   });
 
   it("groupe · retient la formule la moins chère par personne", () => {
-    const est = estimate(dest, 4, 2);
+    const est = estimate(dest, 4, 2, ter);
     expect(est.totalPP).toBe(Math.min(est.totalSolo, est.totalDuo));
     expect(est.totalGroup).toBe(est.totalPP! * 2);
   });
 
   it("config libre · totalPP et totalGroup null", () => {
-    const est = estimate(dest, 4, null);
+    const est = estimate(dest, 4, null, ter);
     expect(est.totalPP).toBeNull();
     expect(est.totalGroup).toBeNull();
   });
@@ -90,12 +94,32 @@ describe("rank", () => {
   it("le catalogue est cohérent (données minimales sur chaque destination)", () => {
     for (const d of destinations) {
       expect(d.slug).toMatch(/^[a-z-]+$/);
-      expect(d.transport.priceAR).toBeGreaterThan(0);
+      expect(d.transports.paris?.priceAR ?? 0).toBeGreaterThan(0);
+      for (const t of Object.values(d.transports)) {
+        expect(t.priceAR).toBeGreaterThan(0);
+        expect(t.duration.length).toBeGreaterThan(0);
+      }
       expect(d.lodging.dorm).toBeGreaterThan(0);
       expect(d.lodging.duo).toBeGreaterThan(0);
       expect(d.foodPerDay).toBeGreaterThan(0);
       expect(d.vibes.length).toBeGreaterThan(0);
       expect(d.bestMonths.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("chaque origine dessert au moins 12 destinations, jamais elle-même", () => {
+    for (const o of ORIGINS) {
+      const reachable = reachableFrom(o.slug);
+      expect(reachable.length).toBeGreaterThanOrEqual(12);
+      expect(reachable.some((d) => d.slug === o.slug)).toBe(false);
+    }
+  });
+
+  it("rank respecte l'origine demandée (transport de la bonne ville)", () => {
+    const fromLyon = rank({ ...base, origin: "lyon" });
+    for (const r of fromLyon) {
+      expect(r.transport).toBe(r.dest.transports.lyon);
+      expect(r.dest.slug).not.toBe("lyon");
     }
   });
 });

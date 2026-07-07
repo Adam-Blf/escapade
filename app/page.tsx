@@ -1,5 +1,6 @@
 import { Planner } from "@/components/Planner";
 import { DonateButton } from "@/components/DonateButton";
+import { APP_VERSION } from "@/lib/version";
 
 export default function Home() {
   return (
@@ -22,7 +23,7 @@ export default function Home() {
             Photos : Wikipédia / Wikimedia Commons. Prix indicatifs calculés pour la ville
             de départ choisie, sans valeur contractuelle.
           </p>
-          <p>Escapade v0.1.0</p>
+          <p>Escapade v{APP_VERSION}</p>
         </div>
       </footer>
     </div>

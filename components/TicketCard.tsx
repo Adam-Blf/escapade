@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { getOrigin } from "@/lib/origins";
@@ -100,7 +101,16 @@ export function TicketCard({
 
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div>
-          <h3 className="font-display text-2xl font-bold leading-tight">{dest.name}</h3>
+          <h3 className="font-display text-2xl font-bold leading-tight">
+            <Link
+              href={`/destination/${dest.slug}?o=${criteria.origin}&n=${criteria.nights}${
+                criteria.travelers !== null ? `&t=${criteria.travelers}` : ""
+              }`}
+              className="transition-colors hover:text-maree"
+            >
+              {dest.name}
+            </Link>
+          </h3>
           <p className="text-sm text-inksoft">{dest.region}</p>
         </div>
         <p className="text-sm leading-relaxed">{dest.tagline}</p>

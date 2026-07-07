@@ -1,84 +1,71 @@
 import { destinations } from "./destinations";
+import { getOrigin } from "./origins";
+import { addNights, checkinDate, toISODate } from "./dates";
+import { amadeusAvailable, cheapestDouble } from "./providers/amadeus";
+import { bestJourneyDuration, navitiaAvailable } from "./providers/navitia";
 import type { OriginSlug, PriceQuote } from "./types";
 
 /**
- * Chaîne de providers de prix transport.
- * Les connecteurs live s'activent dès que leurs clés sont présentes en env,
- * sinon on retombe sur le catalogue local (prix indicatifs résa anticipée).
+ * Devis temps réel, contrainte zéro coût :
+ *  - train · aucune API prix gratuite n'existe (SNCF ne les expose pas), le
+ *    prix reste catalogue MAIS la durée passe en live via Navitia (clé gratuite,
+ *    5000 req/j) dès que SNCF_API_KEY est présente ;
+ *  - hôtel · chambre double la moins chère via Amadeus Self-Service test
+ *    (gratuit) dès que AMADEUS_CLIENT_ID/SECRET sont présentes ;
+ *  - sans aucune clé, tout retombe sur le catalogue : l'app marche toujours.
+ * Un cache mémoire 12h protège les quotas gratuits (les instances Fluid
+ * Compute de Vercel réutilisent le module entre requêtes).
  */
-interface PriceProvider {
-  name: string;
-  available: () => boolean;
-  quote: (
-    slug: string,
-    origin: OriginSlug,
-    month: number | null
-  ) => Promise<PriceQuote | null>;
-}
-
-/**
- * SNCF / Navitia (https://numerique.sncf.com/startup/api/) : horaires et
- * itinéraires. Les prix ne sont pas exposés publiquement par SNCF, ce
- * connecteur sert d'exemple d'intégration : il valide la desserte réelle.
- */
-const navitiaProvider: PriceProvider = {
-  name: "sncf-navitia",
-  available: () => Boolean(process.env.SNCF_API_KEY),
-  quote: async () => {
-    // TODO(adam): brancher GET /coverage/sncf/journeys avec SNCF_API_KEY
-    // pour valider durée et correspondances en temps réel.
-    return null;
-  },
-};
-
-/**
- * Amadeus Self-Service (https://developers.amadeus.com) : hôtels et vols.
- * Gratuit en sandbox, clés AMADEUS_CLIENT_ID / AMADEUS_CLIENT_SECRET.
- */
-const amadeusProvider: PriceProvider = {
-  name: "amadeus",
-  available: () =>
-    Boolean(process.env.AMADEUS_CLIENT_ID && process.env.AMADEUS_CLIENT_SECRET),
-  quote: async () => {
-    // TODO(adam): OAuth2 client_credentials puis Hotel Search v3
-    // pour remplacer lodging.dorm / lodging.duo par des prix live.
-    return null;
-  },
-};
-
-/** Catalogue local : toujours disponible, prix indicatifs. */
-const staticProvider: PriceProvider = {
-  name: "catalogue",
-  available: () => true,
-  quote: async (slug, origin) => {
-    const dest = destinations.find((d) => d.slug === slug);
-    const transport = dest?.transports[origin];
-    if (!dest || !transport) return null;
-    return {
-      dest: slug,
-      origin,
-      transportAR: transport.priceAR,
-      source: "catalogue",
-      live: false,
-    };
-  },
-};
-
-const providers: PriceProvider[] = [navitiaProvider, amadeusProvider, staticProvider];
+const CACHE_TTL_MS = 12 * 3600 * 1000;
+const cache = new Map<string, { at: number; quote: PriceQuote }>();
 
 export async function getQuote(
   slug: string,
   origin: OriginSlug,
-  month: number | null
+  month: number | null,
+  nights = 4
 ): Promise<PriceQuote | null> {
-  for (const provider of providers) {
-    if (!provider.available()) continue;
-    try {
-      const quote = await provider.quote(slug, origin, month);
-      if (quote) return quote;
-    } catch {
-      // provider en panne : on passe au suivant
-    }
+  const dest = destinations.find((d) => d.slug === slug);
+  const transport = dest?.transports[origin];
+  if (!dest || !transport) return null;
+
+  const key = `${slug}|${origin}|${month ?? "x"}|${nights}`;
+  const hit = cache.get(key);
+  if (hit && Date.now() - hit.at < CACHE_TTL_MS) return hit.quote;
+
+  const quote: PriceQuote = {
+    dest: slug,
+    origin,
+    transportAR: transport.priceAR,
+    transportSource: "catalogue",
+    transportLive: false,
+    liveDuration: null,
+    hotelNightlyDuo: null,
+    hotelName: null,
+    hotelLive: false,
+  };
+
+  const checkin = checkinDate(month);
+  const checkout = addNights(checkin, nights);
+
+  const [duration, hotel] = await Promise.allSettled([
+    navitiaAvailable()
+      ? bestJourneyDuration(getOrigin(origin).coords, dest.coords, checkin)
+      : Promise.resolve(null),
+    amadeusAvailable()
+      ? cheapestDouble(dest.coords, toISODate(checkin), toISODate(checkout))
+      : Promise.resolve(null),
+  ]);
+
+  if (duration.status === "fulfilled" && duration.value) {
+    quote.liveDuration = duration.value;
   }
-  return null;
+  if (hotel.status === "fulfilled" && hotel.value) {
+    quote.hotelNightlyDuo = hotel.value.nightlyDuo;
+    quote.hotelName = hotel.value.hotelName;
+    quote.hotelLive = true;
+  }
+
+  cache.set(key, { at: Date.now(), quote });
+  return quote;
 }

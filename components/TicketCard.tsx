@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { getOrigin } from "@/lib/origins";
+import { useLiveQuote } from "@/lib/useLiveQuote";
 import type { Criteria, Result } from "@/lib/types";
 
 const FIT_LABEL = {
@@ -25,6 +26,19 @@ export function TicketCard({
   const showSolo = criteria.travelers !== 2;
   const showDuo = criteria.travelers !== 1;
 
+  // Rafraîchi côté serveur : durée réelle (Navitia) + hôtel le moins cher
+  // (Amadeus). Sans clés API le devis revient identique au catalogue.
+  const quote = useLiveQuote(dest.slug, criteria);
+  const duration = quote?.liveDuration ?? transport.duration;
+  const liveLodgingDuo =
+    quote?.hotelNightlyDuo != null
+      ? Math.round((criteria.nights * quote.hotelNightlyDuo) / 2)
+      : null;
+  const liveTotalDuo =
+    liveLodgingDuo != null
+      ? est.transport + liveLodgingDuo + est.food + est.activities
+      : null;
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 24 }}
@@ -44,7 +58,12 @@ export function TicketCard({
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/80 to-transparent px-5 pb-3 pt-10">
           <p className="font-mono text-xs font-semibold tracking-[0.2em] text-white">
             {originCode} <span aria-hidden>――――▸</span> {dest.code}
-            <span className="ml-3 opacity-80">{transport.duration}</span>
+            <span className="ml-3 opacity-80">{duration}</span>
+            {quote?.liveDuration && (
+              <span className="ml-2 rounded bg-maree/30 px-1.5 py-0.5 text-[10px] font-bold uppercase text-white">
+                live
+              </span>
+            )}
           </p>
         </div>
         {fit && (
@@ -100,9 +119,20 @@ export function TicketCard({
           <div>
             <p className="font-mono text-[11px] uppercase tracking-widest text-inksoft">
               À 2, par pers.
+              {liveTotalDuo != null && (
+                <span className="ml-1.5 rounded bg-maree/15 px-1.5 py-0.5 text-[10px] font-bold text-maree">
+                  hôtel live
+                </span>
+              )}
             </p>
-            <p className="font-display text-3xl font-bold text-maree">~{est.totalDuo}€</p>
-            <p className="text-xs text-inksoft">{dest.duoTip}</p>
+            <p className="font-display text-3xl font-bold text-maree">
+              ~{liveTotalDuo ?? est.totalDuo}€
+            </p>
+            <p className="text-xs text-inksoft">
+              {quote?.hotelName && liveTotalDuo != null
+                ? `${quote.hotelName}, ${quote.hotelNightlyDuo}€/nuit la double`
+                : dest.duoTip}
+            </p>
           </div>
         )}
       </div>

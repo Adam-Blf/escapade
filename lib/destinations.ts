@@ -10,6 +10,7 @@ export const destinations: Destination[] = [
     name: "Dieppe",
     code: "DPE",
     region: "Normandie, côte d'Albâtre",
+    coords: { lat: 49.9229, lng: 1.0777 },
     vibes: ["mer"],
     tagline: "La mer la moins chère de France depuis Paris.",
     transports: {
@@ -30,6 +31,7 @@ export const destinations: Destination[] = [
     name: "Le Tréport",
     code: "LTR",
     region: "Normandie / Picardie",
+    coords: { lat: 50.0594, lng: 1.3774 },
     vibes: ["mer"],
     tagline: "Falaises les plus hautes d'Europe, ambiance carte postale.",
     transports: {
@@ -50,6 +52,7 @@ export const destinations: Destination[] = [
     name: "Étretat",
     code: "ETR",
     region: "Normandie",
+    coords: { lat: 49.7069, lng: 0.2027 },
     vibes: ["mer"],
     tagline: "Les falaises que le monde entier vient voir.",
     transports: {
@@ -70,6 +73,7 @@ export const destinations: Destination[] = [
     name: "Deauville-Trouville",
     code: "DVL",
     region: "Normandie, Côte Fleurie",
+    coords: { lat: 49.36, lng: 0.075 },
     vibes: ["mer"],
     tagline: "Les Planches à 2h de Paris, version étudiante possible.",
     transports: {
@@ -90,6 +94,7 @@ export const destinations: Destination[] = [
     name: "Saint-Malo",
     code: "SML",
     region: "Bretagne, Côte d'Émeraude",
+    coords: { lat: 48.6493, lng: -2.0257 },
     vibes: ["mer"],
     tagline: "Remparts, marées géantes et granit.",
     transports: {
@@ -110,6 +115,7 @@ export const destinations: Destination[] = [
     name: "La Rochelle",
     code: "LRH",
     region: "Charente-Maritime",
+    coords: { lat: 46.1603, lng: -1.1511 },
     vibes: ["mer", "ville"],
     tagline: "Vieux-Port, vélo et île de Ré à portée de pédale.",
     transports: {
@@ -130,6 +136,7 @@ export const destinations: Destination[] = [
     name: "Biarritz",
     code: "BIA",
     region: "Pays basque",
+    coords: { lat: 43.4832, lng: -1.5586 },
     vibes: ["mer"],
     tagline: "Océan, surf et Pays basque.",
     transports: {
@@ -150,6 +157,7 @@ export const destinations: Destination[] = [
     name: "Marseille",
     code: "MRS",
     region: "Provence, Méditerranée",
+    coords: { lat: 43.2965, lng: 5.3698 },
     vibes: ["mer", "ville"],
     tagline: "Calanques, Vieux-Port et soleil quasi garanti.",
     transports: {
@@ -169,6 +177,7 @@ export const destinations: Destination[] = [
     name: "Cassis",
     code: "CSS",
     region: "Provence",
+    coords: { lat: 43.214, lng: 5.5396 },
     vibes: ["mer"],
     tagline: "Le village des calanques, eau turquoise.",
     transports: {
@@ -189,6 +198,7 @@ export const destinations: Destination[] = [
     name: "Sète",
     code: "SET",
     region: "Occitanie, Méditerranée",
+    coords: { lat: 43.4075, lng: 3.6935 },
     vibes: ["mer"],
     tagline: "La Venise du Languedoc, plages de sable infinies.",
     transports: {
@@ -209,6 +219,7 @@ export const destinations: Destination[] = [
     name: "Collioure",
     code: "COL",
     region: "Côte Vermeille, Pyrénées-Orientales",
+    coords: { lat: 42.5251, lng: 3.0837 },
     vibes: ["mer"],
     tagline: "Le village des peintres, entre mer et Pyrénées.",
     transports: {
@@ -229,6 +240,7 @@ export const destinations: Destination[] = [
     name: "Nice",
     code: "NCE",
     region: "Côte d'Azur",
+    coords: { lat: 43.7102, lng: 7.262 },
     vibes: ["mer", "ville"],
     tagline: "La Baie des Anges au tarif Ouigo.",
     transports: {
@@ -249,6 +261,7 @@ export const destinations: Destination[] = [
     name: "Annecy",
     code: "ANN",
     region: "Haute-Savoie",
+    coords: { lat: 45.8992, lng: 6.1294 },
     vibes: ["lac", "montagne"],
     tagline: "Le lac le plus photogénique de France.",
     transports: {
@@ -269,6 +282,7 @@ export const destinations: Destination[] = [
     name: "Gérardmer",
     code: "GER",
     region: "Vosges",
+    coords: { lat: 48.0736, lng: 6.8785 },
     vibes: ["lac", "montagne"],
     tagline: "Lac, forêts et fraîcheur vosgienne, budget mini.",
     transports: {
@@ -289,6 +303,7 @@ export const destinations: Destination[] = [
     name: "Chamonix",
     code: "CHX",
     region: "Mont-Blanc",
+    coords: { lat: 45.9237, lng: 6.8694 },
     vibes: ["montagne"],
     tagline: "La haute montagne accessible en train.",
     transports: {
@@ -309,6 +324,7 @@ export const destinations: Destination[] = [
     name: "Lyon",
     code: "LYS",
     region: "Rhône",
+    coords: { lat: 45.764, lng: 4.8357 },
     vibes: ["ville"],
     tagline: "Capitale de la bouche, à 2h et 30€.",
     transports: {
@@ -328,6 +344,7 @@ export const destinations: Destination[] = [
     name: "Lille",
     code: "LIL",
     region: "Hauts-de-France",
+    coords: { lat: 50.6292, lng: 3.0573 },
     vibes: ["ville"],
     tagline: "Week-end flamand à 1h de Paris.",
     transports: {
@@ -347,6 +364,7 @@ export const destinations: Destination[] = [
     name: "Strasbourg",
     code: "SXB",
     region: "Alsace",
+    coords: { lat: 48.5734, lng: 7.7521 },
     vibes: ["ville"],
     tagline: "La Petite France, colombages et vélo partout.",
     transports: {

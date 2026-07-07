@@ -7,6 +7,10 @@ export async function GET(request: Request) {
   const dest = searchParams.get("dest");
   const originParam = searchParams.get("origin") ?? DEFAULT_ORIGIN;
   const month = searchParams.get("month");
+  const nightsParam = Number(searchParams.get("nights"));
+  const nights = Number.isFinite(nightsParam) && nightsParam >= 1
+    ? Math.min(14, nightsParam)
+    : 4;
 
   if (!dest) {
     return NextResponse.json({ error: "Paramètre dest manquant" }, { status: 400 });
@@ -15,7 +19,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Origine inconnue" }, { status: 400 });
   }
 
-  const quote = await getQuote(dest, originParam, month ? Number(month) : null);
+  const quote = await getQuote(dest, originParam, month ? Number(month) : null, nights);
   if (!quote) {
     return NextResponse.json(
       { error: "Destination inconnue ou liaison non proposée" },

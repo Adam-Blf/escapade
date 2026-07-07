@@ -11,6 +11,7 @@ const dest: Destination = {
   name: "Testville",
   code: "TST",
   region: "Testie",
+  coords: { lat: 49.0, lng: 1.0 },
   vibes: ["mer"],
   tagline: "Pour les tests.",
   transports: { paris: ter },

@@ -3,6 +3,7 @@ import { getOrigin } from "./origins";
 import { addNights, checkinDate, toISODate } from "./dates";
 import { amadeusAvailable, cheapestDouble } from "./providers/amadeus";
 import { bestJourneyDuration, navitiaAvailable } from "./providers/navitia";
+import { climateNormal } from "./providers/openmeteo";
 import type { OriginSlug, PriceQuote } from "./types";
 
 /**
@@ -12,6 +13,7 @@ import type { OriginSlug, PriceQuote } from "./types";
  *    5000 req/j) dès que SNCF_API_KEY est présente ;
  *  - hôtel · chambre double la moins chère via Amadeus Self-Service test
  *    (gratuit) dès que AMADEUS_CLIENT_ID/SECRET sont présentes ;
+ *  - climat · normale du mois via Open-Meteo (gratuit, sans clé, toujours actif) ;
  *  - sans aucune clé, tout retombe sur le catalogue : l'app marche toujours.
  * Un cache mémoire 12h protège les quotas gratuits (les instances Fluid
  * Compute de Vercel réutilisent le module entre requêtes).
@@ -43,18 +45,21 @@ export async function getQuote(
     hotelNightlyDuo: null,
     hotelName: null,
     hotelLive: false,
+    climateAvgMaxC: null,
+    climateRainyDaysPct: null,
   };
 
   const checkin = checkinDate(month);
   const checkout = addNights(checkin, nights);
 
-  const [duration, hotel] = await Promise.allSettled([
+  const [duration, hotel, climate] = await Promise.allSettled([
     navitiaAvailable()
       ? bestJourneyDuration(getOrigin(origin).coords, dest.coords, checkin)
       : Promise.resolve(null),
     amadeusAvailable()
       ? cheapestDouble(dest.coords, toISODate(checkin), toISODate(checkout))
       : Promise.resolve(null),
+    climateNormal(dest.coords, month),
   ]);
 
   if (duration.status === "fulfilled" && duration.value) {
@@ -64,6 +69,10 @@ export async function getQuote(
     quote.hotelNightlyDuo = hotel.value.nightlyDuo;
     quote.hotelName = hotel.value.hotelName;
     quote.hotelLive = true;
+  }
+  if (climate.status === "fulfilled" && climate.value) {
+    quote.climateAvgMaxC = climate.value.avgMaxC;
+    quote.climateRainyDaysPct = climate.value.rainyDaysPct;
   }
 
   cache.set(key, { at: Date.now(), quote });

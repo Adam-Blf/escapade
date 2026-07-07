@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { parseText } from "@/lib/parse";
 import { rank } from "@/lib/engine";
+import { parseSignals, tipsFor } from "@/lib/profile";
 import { DEFAULT_ORIGIN, ORIGINS, getOrigin } from "@/lib/origins";
 import type { Criteria, OriginSlug, Result } from "@/lib/types";
 import { CriteriaForm } from "./CriteriaForm";
@@ -210,6 +211,16 @@ export function Planner() {
                 </span>
               ))}
             </div>
+            {tipsFor(parseSignals(applied.profile)).length > 0 && (
+              <ul className="mb-6 space-y-1 rounded-2xl border border-line bg-card p-4 text-sm text-inksoft">
+                {tipsFor(parseSignals(applied.profile)).map((tip) => (
+                  <li key={tip} className="flex gap-2">
+                    <span aria-hidden className="text-corail">▸</span>
+                    {tip}
+                  </li>
+                ))}
+              </ul>
+            )}
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {results.map((r, i) => (
                 <TicketCard key={r.dest.slug} result={r} criteria={applied} index={i} />

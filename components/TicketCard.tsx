@@ -19,10 +19,18 @@ export function TicketCard({
   result,
   criteria,
   index,
+  compareSelected = false,
+  compareDisabled = false,
+  onToggleCompare,
 }: {
   result: Result;
   criteria: Criteria;
   index: number;
+  /** Sélectionné pour le comparateur */
+  compareSelected?: boolean;
+  /** Sélection désactivée (max atteint, ce ticket non sélectionné) */
+  compareDisabled?: boolean;
+  onToggleCompare?: (slug: string) => void;
 }) {
   const [copied, setCopied] = useState(false);
   const { dest, transport, est, fit } = result;
@@ -200,10 +208,25 @@ export function TicketCard({
           type="button"
           onClick={share}
           aria-label="Partager cette recherche"
-          className="ml-auto rounded-full border border-line px-4 py-2 text-xs font-semibold text-inksoft transition-colors hover:border-corail hover:text-corail"
+          className="rounded-full border border-line px-4 py-2 text-xs font-semibold text-inksoft transition-colors hover:border-corail hover:text-corail"
         >
           {copied ? "Lien copié ✓" : "Partager"}
         </button>
+        {onToggleCompare && (
+          <button
+            type="button"
+            onClick={() => onToggleCompare(dest.slug)}
+            disabled={compareDisabled}
+            aria-pressed={compareSelected}
+            className={`ml-auto rounded-full border px-4 py-2 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
+              compareSelected
+                ? "border-maree bg-maree text-white"
+                : "border-line text-inksoft hover:border-maree hover:text-ink"
+            }`}
+          >
+            {compareSelected ? "Sélectionné ✓" : "Comparer"}
+          </button>
+        )}
       </div>
     </motion.article>
   );

@@ -18,8 +18,10 @@ lib/            source de vérité, testée en isolation (tests/*.test.ts)
   ├─ dates.ts            dates de check-in/out déduites du mois demandé
   ├─ prices.ts           orchestrateur de devis temps réel (voir providers/)
   ├─ providers/
-  │    ├─ navitia.ts     durée réelle de trajet (SNCF, env-gated)
-  │    └─ amadeus.ts     prix hôtel live (env-gated)
+  │    ├─ navitia.ts     durée réelle de trajet + perturbations (SNCF, env-gated)
+  │    ├─ amadeus.ts     prix hôtel live (env-gated)
+  │    ├─ openmeteo.ts   normale climatique du mois (gratuit, sans clé, toujours actif)
+  │    └─ joursFeries.ts jours fériés France métropole (gratuit, sans clé, calendrier.api.gouv.fr)
   ├─ links.ts            deep-links de réservation (Trainline, Booking, HostelWorld)
   ├─ share.ts            Criteria ↔ query params, assainissement des entrées
   ├─ recent.ts           historique des recherches (localStorage, client-only)
@@ -42,6 +44,8 @@ components/       UI pure, consomme lib/
   ├─ Comparator.tsx        modal de comparaison de 2-3 destinations
   ├─ DestinationBudget.tsx budget interactif de la page détail
   ├─ DonateButton.tsx      lien Payment Link Stripe, masqué si non configuré
+  ├─ DisruptionBanner.tsx  perturbations SNCF actives sur la liaison (silencieux par défaut)
+  ├─ HolidayBanner.tsx     jour férié pendant le séjour (silencieux par défaut)
   ├─ JsonLd.tsx             rend un <script type="application/ld+json"> échappé
   ├─ ThemeToggle.tsx       bascule clair/sombre manuelle
   └─ LangSwitcher.tsx      bascule FR/EN, conserve le chemin courant
@@ -59,6 +63,7 @@ app/              routing Next.js App Router
   │                           sur localhost:3000 en prod (bug réel corrigé, pas théorique).
   ├─ api/prices/route.ts    endpoint de devis temps réel (utilisé par useLiveQuote), hors [lang]
   ├─ api/disruptions/route.ts perturbations SNCF live, hors [lang]
+  ├─ api/holidays/route.ts  jours fériés France sur la période du séjour, hors [lang]
   ├─ sitemap.ts / robots.ts  SEO, génère les URLs pour chaque langue
   ├─ manifest.ts             PWA (icon-192 / icon-512, hors [lang] : le manifeste n'est pas localisé)
   └─ not-found.tsx           404 sur le thème aviation

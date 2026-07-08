@@ -7,7 +7,7 @@
 [![top language](https://img.shields.io/github/languages/top/Adam-Blf/escapade?style=flat-square)](https://github.com/Adam-Blf/escapade)
 [![license](https://img.shields.io/github/license/Adam-Blf/escapade?style=flat-square&color=D4A437)](LICENSE)
 <!-- adam-badges:end -->
-![version](https://img.shields.io/badge/version-0.5.0-001329?style=flat-square)
+![version](https://img.shields.io/badge/version-0.5.1-001329?style=flat-square)
 
 Planificateur de vacances au départ de Paris, Lyon, Lille, Marseille ou
 Bordeaux, pensé pour les budgets étudiants. Décris ton envie en une phrase
@@ -54,6 +54,9 @@ une clé gratuite, elle enrichit l'affichage.
       dédiée par liaison
 - [x] Date de départ exacte (en plus du mois flexible), parsée aussi en
       langage naturel ("le 12 août", "05/09")
+- [x] "Je ne sais pas, surprends-moi" : critères aléatoires raisonnables pour
+      qui n'a pas d'idée précise
+- [x] Page 404 sur-mesure, dans le ton du site
 - [x] Prix temps réel best-effort (durée Navitia, hôtel Amadeus) avec repli
       catalogue transparent
 - [x] Recherche partageable par URL, dernières recherches en local

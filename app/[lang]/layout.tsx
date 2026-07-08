@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Bricolage_Grotesque, IBM_Plex_Mono, Instrument_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import Script from "next/script";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { NO_FLASH_SCRIPT } from "@/lib/theme";
 import { LOCALES, isLocale, type Locale } from "@/lib/i18n/dictionaries";
@@ -89,10 +90,12 @@ export default async function RootLayout({
       className={`${bricolage.variable} ${instrument.variable} ${plexMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: NO_FLASH_SCRIPT }} />
-      </head>
       <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        <Script
+          id="theme-no-flash"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: NO_FLASH_SCRIPT }}
+        />
         <LocaleProvider lang={lang}>{children}</LocaleProvider>
         <Analytics />
       </body>

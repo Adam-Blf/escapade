@@ -9,6 +9,7 @@ import { DEFAULT_ORIGIN, ORIGINS, getOrigin } from "@/lib/origins";
 import { criteriaFromParams, criteriaToParams } from "@/lib/share";
 import { loadRecent, saveRecent, type RecentSearch } from "@/lib/recent";
 import { MAX_COMPARE, canCompare, selectedResults, toggleCompare } from "@/lib/compare";
+import { surpriseCriteria } from "@/lib/surprise";
 import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { Criteria, OriginSlug, Result } from "@/lib/types";
 import { CriteriaForm } from "./CriteriaForm";
@@ -243,13 +244,22 @@ export function Planner() {
                       </button>
                     ))}
                   </div>
-                  <button
-                    type="submit"
-                    disabled={!text.trim()}
-                    className="self-start rounded-full bg-corail px-6 py-3 font-display text-lg font-bold text-white transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40"
-                  >
-                    {dict.textMode.submit}
-                  </button>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <button
+                      type="submit"
+                      disabled={!text.trim()}
+                      className="self-start rounded-full bg-corail px-6 py-3 font-display text-lg font-bold text-white transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40"
+                    >
+                      {dict.textMode.submit}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => search(surpriseCriteria(origin))}
+                      className="self-start rounded-full border border-dashed border-line px-5 py-3 text-sm font-semibold text-inksoft transition-colors hover:border-corail hover:text-corail"
+                    >
+                      {dict.textMode.surpriseMe}
+                    </button>
+                  </div>
                 </form>
               </motion.div>
             ) : (

@@ -36,6 +36,7 @@ export interface Dictionary {
     placeholderPrefix: string;
     tryLabel: string;
     submit: string;
+    surpriseMe: string;
   };
   criteriaForm: {
     budgetLabel: string;
@@ -138,6 +139,7 @@ const fr: Dictionary = {
     placeholderPrefix: "Ex : ",
     tryLabel: "Essaie :",
     submit: "Trouver où partir",
+    surpriseMe: "Je ne sais pas, surprends-moi",
   },
   criteriaForm: {
     budgetLabel: "Budget par personne",
@@ -248,6 +250,7 @@ const en: Dictionary = {
     placeholderPrefix: "E.g.: ",
     tryLabel: "Try:",
     submit: "Find where to go",
+    surpriseMe: "I don't know, surprise me",
   },
   criteriaForm: {
     budgetLabel: "Budget per person",

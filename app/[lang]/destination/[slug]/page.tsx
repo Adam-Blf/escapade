@@ -7,6 +7,8 @@ import { isOriginSlug, DEFAULT_ORIGIN } from "@/lib/origins";
 import { getDictionary, isLocale, LOCALES, type Locale } from "@/lib/i18n/dictionaries";
 import { DestinationBudget } from "@/components/DestinationBudget";
 import { DisruptionBanner } from "@/components/DisruptionBanner";
+import { JsonLd } from "@/components/JsonLd";
+import { destinationJsonLd } from "@/lib/jsonld";
 
 const MONTH_NAMES: Record<Locale, string[]> = {
   fr: ["janv.", "févr.", "mars", "avril", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."],
@@ -65,8 +67,14 @@ export default async function DestinationPage({
   const startDate =
     typeof sp.d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(sp.d) ? sp.d : null;
 
+  const description =
+    lang === "fr"
+      ? `${dest.tagline} Budget réel train + logement + repas depuis Paris, Lyon, Lille, Marseille ou Bordeaux.`
+      : `${dest.tagline} Real train + lodging + food budget from Paris, Lyon, Lille, Marseille or Bordeaux.`;
+
   return (
     <main className="mx-auto w-full max-w-6xl px-5 pb-24">
+      <JsonLd data={destinationJsonLd(dest, lang, description)} />
       <nav className="pt-6">
         <Link
           href={`/${lang}`}

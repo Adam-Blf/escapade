@@ -5,8 +5,10 @@ import { DonateButton } from "@/components/DonateButton";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { PlaneMark } from "@/components/PlaneMark";
 import { LangSwitcher } from "@/components/LangSwitcher";
+import { JsonLd } from "@/components/JsonLd";
 import { APP_VERSION } from "@/lib/version";
 import { getDictionary, isLocale, type Locale } from "@/lib/i18n/dictionaries";
+import { websiteJsonLd } from "@/lib/jsonld";
 
 export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
   const { lang: raw } = await params;
@@ -16,6 +18,7 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
   return (
     <MotionConfig reducedMotion="user">
+      <JsonLd data={websiteJsonLd(lang, dict.hero.title1, dict.header.tagline)} />
       <div className="flex min-h-screen flex-col">
         <header className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 pt-6">
           <p className="flex items-center gap-1.5 font-mono text-sm font-semibold tracking-[0.4em]">

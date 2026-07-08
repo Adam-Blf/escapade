@@ -1,3 +1,5 @@
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { destinations } from "@/lib/destinations";
 import { activitiesOf } from "@/lib/activities";
@@ -6,6 +8,10 @@ import { reachableFrom } from "@/lib/engine";
 import type { OriginSlug } from "@/lib/types";
 
 const ORIGIN_SLUGS = ORIGINS.map((o) => o.slug);
+const IMG_DIR = path.resolve(__dirname, "../public/img");
+const credits: Record<string, { page: string; source: string }> = JSON.parse(
+  readFileSync(path.join(IMG_DIR, "credits.json"), "utf8")
+);
 
 describe("catalogue destinations · invariants documentés (CLAUDE.md)", () => {
   it("chaque destination a au moins 4 activités curatées", () => {
@@ -78,5 +84,15 @@ describe("catalogue destinations · invariants documentés (CLAUDE.md)", () => {
   it("aucun doublon de slug", () => {
     const slugs = destinations.map((d) => d.slug);
     expect(new Set(slugs).size).toBe(slugs.length);
+  });
+
+  it("chaque destination a son image dans public/img/ et son crédit Wikimedia", () => {
+    for (const d of destinations) {
+      expect(
+        existsSync(path.join(IMG_DIR, `${d.slug}.jpg`)),
+        `public/img/${d.slug}.jpg est absent (hero image cassée en prod)`
+      ).toBe(true);
+      expect(credits[d.slug], `${d.slug} n'a pas d'entrée dans credits.json`).toBeDefined();
+    }
   });
 });

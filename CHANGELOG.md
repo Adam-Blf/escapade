@@ -3,6 +3,18 @@
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 Versions alignées sur `package.json`.
 
+## 0.6.3
+
+- Fix images cassées : les 6 destinations européennes (Amsterdam,
+  Barcelone, Bruxelles, Genève, Londres, Milan) n'avaient ni image
+  dans `public/img/` ni entrée dans `credits.json` depuis leur ajout
+  au catalogue — leur `<Image>` retournait 404 en prod (confirmé sur
+  `escapade.beloucif.com`). Photos Wikimedia Commons sourcées et
+  créditées, même pattern que les 18 autres destinations. Nouveau
+  test `tests/destinations.test.ts` qui vérifie l'existence de
+  l'image + du crédit pour chaque destination du catalogue, pour que
+  ce bug ne puisse plus revenir silencieusement.
+
 ## 0.6.2
 
 - Lien "En savoir plus sur Wikipédia ↗" (`lib/links.ts` → `wikipediaUrl`)

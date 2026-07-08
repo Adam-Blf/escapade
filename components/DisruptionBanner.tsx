@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { OriginSlug } from "@/lib/types";
 
 /**
@@ -39,6 +40,7 @@ export function DisruptionBanner({
     };
   }, [destSlug, origin, month, startDate]);
 
+  const { dict } = useLocale();
   if (disruptions.length === 0) return null;
 
   return (
@@ -47,7 +49,7 @@ export function DisruptionBanner({
       className="mb-6 rounded-2xl border border-corail/40 bg-corail/10 px-4 py-3"
     >
       <p className="mb-1 font-mono text-xs font-semibold uppercase tracking-widest text-corail">
-        Perturbations SNCF signalées
+        {dict.disruptions.title}
       </p>
       <ul className="space-y-0.5 text-sm text-ink">
         {disruptions.map((d) => (

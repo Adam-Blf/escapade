@@ -3,6 +3,19 @@
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 Versions alignées sur `package.json`.
 
+## 0.5.0
+
+- i18n FR/EN : routing par `app/[lang]/` (`proxy.ts` redirige `/` vers la
+  langue préférée du navigateur), coquille UI entièrement traduite
+  (Planner, formulaires, tickets, comparateur, pages destination/soutenir),
+  sitemap et metadata par langue, sélecteur de langue dans le header. Le
+  contenu éditorial des destinations (taglines, highlights, activités)
+  reste en français dans les deux langues pour l'instant — traduction de
+  contenu prévue comme chantier séparé.
+- Correction : `proxy.ts` redirigeait aussi les assets statiques
+  (`/img/*.jpg`) vers un chemin préfixé inexistant, cassant l'optimiseur
+  d'image Next.js. Trouvé en QA visuelle avant merge.
+
 ## 0.4.0
 
 - Europe proche : 6 nouvelles destinations accessibles en train direct depuis

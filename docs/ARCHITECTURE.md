@@ -26,6 +26,9 @@ lib/            source de vérité, testée en isolation (tests/*.test.ts)
   ├─ compare.ts           sélection de destinations à comparer (toggle, limite à 3)
   ├─ theme.ts             thème clair/sombre manuel (script anti-flash, localStorage)
   ├─ site.ts              constantes du site (nom, URL) pour metadata/sitemap
+  ├─ i18n/
+  │    ├─ dictionaries.ts  dictionnaires FR/EN (coquille UI uniquement, pas le contenu éditorial)
+  │    └─ LocaleProvider.tsx contexte React (lang, dict) posé par app/[lang]/layout.tsx
   ├─ useLiveQuote.ts     hook consommant /api/prices pour un ticket donné
   └─ version.ts          version applicative (importée depuis package.json)
 
@@ -36,17 +39,26 @@ components/       UI pure, consomme lib/
   ├─ Comparator.tsx        modal de comparaison de 2-3 destinations
   ├─ DestinationBudget.tsx budget interactif de la page détail
   ├─ DonateButton.tsx      lien Payment Link Stripe, masqué si non configuré
-  └─ ThemeToggle.tsx       bascule clair/sombre manuelle
+  ├─ ThemeToggle.tsx       bascule clair/sombre manuelle
+  └─ LangSwitcher.tsx      bascule FR/EN, conserve le chemin courant
 
 app/              routing Next.js App Router
-  ├─ page.tsx                page d'accueil (monte <Planner />)
-  ├─ destination/[slug]/page.tsx  page détail (generateStaticParams + metadata par page)
-  ├─ soutenir/page.tsx       page don
-  ├─ api/prices/route.ts    endpoint de devis temps réel (utilisé par useLiveQuote)
-  ├─ sitemap.ts / robots.ts  SEO
+  ├─ [lang]/                 tout ce qui est visitable est sous un préfixe de langue (fr|en)
+  │    ├─ layout.tsx          root layout réel (html/body, fonts, LocaleProvider, generateStaticParams)
+  │    ├─ page.tsx            page d'accueil (monte <Planner />)
+  │    ├─ destination/[slug]/page.tsx  page détail (generateStaticParams × langues, metadata par page)
+  │    └─ soutenir/page.tsx   page don
+  ├─ api/prices/route.ts    endpoint de devis temps réel (utilisé par useLiveQuote), hors [lang]
+  ├─ sitemap.ts / robots.ts  SEO, génère les URLs pour chaque langue
   ├─ manifest.ts             PWA
   └─ icon.tsx / apple-icon.tsx / opengraph-image.tsx / icon-192 / icon-512
                              icônes et image OG générées au build (next/og, zéro asset binaire)
+
+proxy.ts          détecte la langue préférée (Accept-Language) et redirige
+                  "/" vers "/fr" ou "/en". Le matcher EXCLUT tout chemin
+                  avec une extension de fichier (assets sous public/) —
+                  piège rencontré : sans cette exclusion, /img/*.jpg était
+                  redirigé vers un chemin préfixé inexistant.
 ```
 
 ## Flux de données

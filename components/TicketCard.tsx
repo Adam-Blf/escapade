@@ -7,13 +7,8 @@ import { motion } from "framer-motion";
 import { getOrigin } from "@/lib/origins";
 import { bookingUrl, hostelUrl, searchShareUrl, trainUrl } from "@/lib/links";
 import { useLiveQuote } from "@/lib/useLiveQuote";
+import { useLocale, withLocale } from "@/lib/i18n/LocaleProvider";
 import type { Criteria, Result } from "@/lib/types";
-
-const FIT_LABEL = {
-  ok: { text: "Dans ton budget", cls: "bg-maree/15 text-maree" },
-  tight: { text: "Ça passe juste", cls: "bg-sable/40 text-ink" },
-  over: { text: "Au-dessus du budget", cls: "bg-corail/15 text-corail" },
-} as const;
 
 /** Numéro de billet stable (pas aléatoire) façon carte d'embarquement, purement décoratif. */
 function ticketCode(seed: string): string {
@@ -54,8 +49,15 @@ export function TicketCard({
   compareDisabled?: boolean;
   onToggleCompare?: (slug: string) => void;
 }) {
+  const { lang, dict } = useLocale();
   const [copied, setCopied] = useState(false);
   const { dest, transport, est, fit } = result;
+
+  const FIT_LABEL = {
+    ok: { text: dict.fit.ok, cls: "bg-maree/15 text-maree" },
+    tight: { text: dict.fit.tight, cls: "bg-sable/40 text-ink" },
+    over: { text: dict.fit.over, cls: "bg-corail/15 text-corail" },
+  } as const;
 
   const share = async () => {
     const url = searchShareUrl(criteria);
@@ -93,6 +95,10 @@ export function TicketCard({
       ? est.transport + liveLodgingDuo + est.food + est.activities
       : null;
 
+  const destHref = `${withLocale(lang, `/destination/${dest.slug}`)}?o=${criteria.origin}&n=${criteria.nights}${
+    criteria.travelers !== null ? `&t=${criteria.travelers}` : ""
+  }${criteria.startDate ? `&d=${criteria.startDate}` : ""}`;
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 24 }}
@@ -122,7 +128,7 @@ export function TicketCard({
               <>
                 {quote?.liveDuration && (
                   <span className="ml-2 rounded bg-maree/30 px-1.5 py-0.5 text-[10px] font-bold uppercase text-white">
-                    live
+                    {dict.ticket.live}
                   </span>
                 )}
                 {quote?.climateAvgMaxC != null && (
@@ -130,8 +136,8 @@ export function TicketCard({
                     className="ml-2 rounded bg-sable/40 px-1.5 py-0.5 text-[10px] font-bold text-ink"
                     title={
                       quote.climateRainyDaysPct != null
-                        ? `Normale saisonnière · ${quote.climateRainyDaysPct}% de jours pluvieux`
-                        : "Normale saisonnière"
+                        ? `${quote.climateRainyDaysPct}%`
+                        : undefined
                     }
                   >
                     {quote.climateAvgMaxC}°C
@@ -153,12 +159,7 @@ export function TicketCard({
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div>
           <h3 className="font-display text-2xl font-bold leading-tight">
-            <Link
-              href={`/destination/${dest.slug}?o=${criteria.origin}&n=${criteria.nights}${
-                criteria.travelers !== null ? `&t=${criteria.travelers}` : ""
-              }${criteria.startDate ? `&d=${criteria.startDate}` : ""}`}
-              className="transition-colors hover:text-maree"
-            >
+            <Link href={destHref} className="transition-colors hover:text-maree">
               {dest.name}
             </Link>
           </h3>
@@ -201,18 +202,18 @@ export function TicketCard({
         {showSolo && (
           <div>
             <p className="font-mono text-[11px] uppercase tracking-widest text-inksoft">
-              Solo, {criteria.nights} nuits
+              {dict.results.solo}, {criteria.nights} {dict.results.soloNights}
             </p>
             <p className="font-display text-3xl font-bold text-maree">~{est.totalSolo}€</p>
             <p className="text-xs text-inksoft">
-              dodo {est.lodgingSolo}€ + repas {est.food}€
+              {dict.destinationPage.lodging} {est.lodgingSolo}€ + {dict.destinationPage.meals} {est.food}€
             </p>
           </div>
         )}
         {showDuo && (
           <div>
             <p className="font-mono text-[11px] uppercase tracking-widest text-inksoft">
-              À 2, par pers.
+              {dict.results.duo}
               {isLoading ? (
                 <span
                   aria-hidden
@@ -221,7 +222,7 @@ export function TicketCard({
               ) : (
                 liveTotalDuo != null && (
                   <span className="ml-1.5 rounded bg-maree/15 px-1.5 py-0.5 text-[10px] font-bold text-maree">
-                    hôtel live
+                    {dict.ticket.hotelLive}
                   </span>
                 )
               )}
@@ -246,7 +247,7 @@ export function TicketCard({
           rel="noopener noreferrer"
           className="rounded-full bg-maree px-4 py-2 text-xs font-semibold text-white transition-transform hover:scale-[1.03] active:scale-[0.97]"
         >
-          Réserver le train ↗
+          {dict.ticket.reserveTrain}
         </a>
         <a
           href={bookingUrl(criteria, dest)}
@@ -254,7 +255,7 @@ export function TicketCard({
           rel="noopener noreferrer"
           className="rounded-full border border-line px-4 py-2 text-xs font-semibold text-inksoft transition-colors hover:border-maree hover:text-ink"
         >
-          Hôtels ↗
+          {dict.ticket.hotels}
         </a>
         <a
           href={hostelUrl(dest)}
@@ -262,15 +263,15 @@ export function TicketCard({
           rel="noopener noreferrer"
           className="rounded-full border border-line px-4 py-2 text-xs font-semibold text-inksoft transition-colors hover:border-maree hover:text-ink"
         >
-          Auberges ↗
+          {dict.ticket.hostels}
         </a>
         <button
           type="button"
           onClick={share}
-          aria-label="Partager cette recherche"
+          aria-label={dict.ticket.share}
           className="rounded-full border border-line px-4 py-2 text-xs font-semibold text-inksoft transition-colors hover:border-corail hover:text-corail"
         >
-          {copied ? "Lien copié ✓" : "Partager"}
+          {copied ? dict.ticket.shareCopied : dict.ticket.share}
         </button>
         {onToggleCompare && (
           <button
@@ -284,7 +285,7 @@ export function TicketCard({
                 : "border-line text-inksoft hover:border-maree hover:text-ink"
             }`}
           >
-            {compareSelected ? "Sélectionné ✓" : "Comparer"}
+            {compareSelected ? dict.ticket.compareSelected : dict.ticket.compare}
           </button>
         )}
       </div>

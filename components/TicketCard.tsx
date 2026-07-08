@@ -61,7 +61,8 @@ export function TicketCard({
 
   const share = async () => {
     const url = searchShareUrl(criteria);
-    const title = `Escapade · ${dest.name} pour ~${est.totalDuo}€`;
+    const refPrice = est.totalPP ?? Math.min(est.totalSolo, est.totalDuo);
+    const title = `Escapade · ${dest.name} pour ~${refPrice}€`;
     try {
       if (navigator.share) {
         await navigator.share({ title, url });
@@ -79,8 +80,10 @@ export function TicketCard({
     }
   };
   const originCode = getOrigin(criteria.origin).code;
-  const showSolo = criteria.travelers !== 2;
-  const showDuo = criteria.travelers !== 1;
+  const groupSize = criteria.travelers;
+  const showGroup = groupSize !== null && groupSize >= 3;
+  const showSolo = !showGroup && groupSize !== 2;
+  const showDuo = !showGroup && groupSize !== 1;
 
   // Rafraîchi côté serveur : durée réelle (Navitia) + hôtel le moins cher
   // (Amadeus). Sans clés API le devis revient identique au catalogue.
@@ -198,7 +201,21 @@ export function TicketCard({
         <span aria-hidden className="absolute -right-3 -top-3 h-6 w-6 rounded-full bg-paper" />
       </div>
 
-      <div className="grid grid-cols-2 gap-3 p-5 pt-4">
+      <div className={`grid gap-3 p-5 pt-4 ${showGroup ? "grid-cols-1" : "grid-cols-2"}`}>
+        {showGroup && (
+          <div>
+            <p className="font-mono text-[11px] uppercase tracking-widest text-inksoft">
+              {dict.results.group(groupSize!)}, {criteria.nights} {dict.results.soloNights}
+            </p>
+            <p className="font-display text-3xl font-bold text-maree">
+              ~{est.totalPP}€{" "}
+              <span className="text-base font-normal text-inksoft">
+                {dict.destinationPage.perPerson}
+              </span>
+            </p>
+            <p className="text-xs text-inksoft">{dict.results.groupTotal(est.totalGroup!)}</p>
+          </div>
+        )}
         {showSolo && (
           <div>
             <p className="font-mono text-[11px] uppercase tracking-widest text-inksoft">

@@ -53,11 +53,13 @@ export function Planner() {
     }
     if (c.budget !== null) chips.push(`${c.budget}€`);
     chips.push(
-      c.travelers === 1
-        ? "solo"
-        : c.travelers === 2
-          ? dict.results.asCouple
-          : dict.results.soloOrCouple
+      c.travelers === null
+        ? dict.results.soloOrCouple
+        : c.travelers === 1
+          ? "solo"
+          : c.travelers === 2
+            ? dict.results.asCouple
+            : dict.results.groupChip(c.travelers)
     );
     if (c.startDate) {
       const [y, m, d] = c.startDate.split("-").map(Number);

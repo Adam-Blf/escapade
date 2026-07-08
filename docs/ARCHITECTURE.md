@@ -24,6 +24,9 @@ lib/            source de vérité, testée en isolation (tests/*.test.ts)
   ├─ share.ts            Criteria ↔ query params, assainissement des entrées
   ├─ recent.ts           historique des recherches (localStorage, client-only)
   ├─ compare.ts           sélection de destinations à comparer (toggle, limite à 3)
+  ├─ co2.ts                distance haversine + comparatif CO2 train/voiture/avion
+  ├─ surprise.ts           génère des critères aléatoires ("surprends-moi")
+  ├─ jsonld.ts             builders schema.org (WebSite, TouristAttraction)
   ├─ theme.ts             thème clair/sombre manuel (script anti-flash, localStorage)
   ├─ site.ts              constantes du site (nom, URL) pour metadata/sitemap
   ├─ i18n/
@@ -39,20 +42,32 @@ components/       UI pure, consomme lib/
   ├─ Comparator.tsx        modal de comparaison de 2-3 destinations
   ├─ DestinationBudget.tsx budget interactif de la page détail
   ├─ DonateButton.tsx      lien Payment Link Stripe, masqué si non configuré
+  ├─ JsonLd.tsx             rend un <script type="application/ld+json"> échappé
   ├─ ThemeToggle.tsx       bascule clair/sombre manuelle
   └─ LangSwitcher.tsx      bascule FR/EN, conserve le chemin courant
 
 app/              routing Next.js App Router
   ├─ [lang]/                 tout ce qui est visitable est sous un préfixe de langue (fr|en)
-  │    ├─ layout.tsx          root layout réel (html/body, fonts, LocaleProvider, generateStaticParams)
-  │    ├─ page.tsx            page d'accueil (monte <Planner />)
-  │    ├─ destination/[slug]/page.tsx  page détail (generateStaticParams × langues, metadata par page)
-  │    └─ soutenir/page.tsx   page don
+  │    ├─ layout.tsx          root layout réel (html/body, fonts, LocaleProvider, generateStaticParams,
+  │    │                       metadataBase — voir docs/adr/0001-csp-sans-nonce.md pour le contexte sécu)
+  │    ├─ page.tsx            page d'accueil (monte <Planner />, JSON-LD WebSite)
+  │    ├─ destination/[slug]/page.tsx  page détail (generateStaticParams × langues, JSON-LD TouristAttraction)
+  │    ├─ soutenir/page.tsx   page don
+  │    └─ icon.tsx / apple-icon.tsx / opengraph-image.tsx
+  │                           icônes et image OG (next/og). Doivent rester sous [lang] pour hériter du
+  │                           metadataBase du layout — les sortir de ce dossier fait retomber og:image
+  │                           sur localhost:3000 en prod (bug réel corrigé, pas théorique).
   ├─ api/prices/route.ts    endpoint de devis temps réel (utilisé par useLiveQuote), hors [lang]
+  ├─ api/disruptions/route.ts perturbations SNCF live, hors [lang]
   ├─ sitemap.ts / robots.ts  SEO, génère les URLs pour chaque langue
-  ├─ manifest.ts             PWA
-  └─ icon.tsx / apple-icon.tsx / opengraph-image.tsx / icon-192 / icon-512
-                             icônes et image OG générées au build (next/og, zéro asset binaire)
+  ├─ manifest.ts             PWA (icon-192 / icon-512, hors [lang] : le manifeste n'est pas localisé)
+  └─ not-found.tsx           404 sur le thème aviation
+
+.github/          CI et hygiène du repo
+  ├─ workflows/ci.yml       tests + tsc + eslint + build + gitleaks, required checks sur main
+  └─ dependabot.yml         mises à jour hebdo npm + github-actions
+
+next.config.ts    en-têtes de sécurité (CSP, HSTS, etc.) — voir docs/adr/
 
 proxy.ts          détecte la langue préférée (Accept-Language) et redirige
                   "/" vers "/fr" ou "/en". Le matcher EXCLUT tout chemin

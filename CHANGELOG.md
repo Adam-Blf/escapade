@@ -3,6 +3,14 @@
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 Versions alignées sur `package.json`.
 
+## 0.5.5
+
+- Dependabot (`.github/dependabot.yml`) : mises à jour hebdo npm
+  (groupées dev-deps mineures/patch) + github-actions.
+- Job `secrets-scan` (gitleaks) ajouté à la CI, en informatif (pas
+  encore required check, le temps de valider qu'il ne remonte pas de
+  faux positifs sur l'historique).
+
 ## 0.5.4
 
 - En-têtes de sécurité HTTP (`next.config.ts` → `headers()`) : CSP,

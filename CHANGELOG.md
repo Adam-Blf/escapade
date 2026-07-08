@@ -3,6 +3,15 @@
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 Versions alignées sur `package.json`.
 
+## 0.5.4
+
+- En-têtes de sécurité HTTP (`next.config.ts` → `headers()`) : CSP,
+  HSTS (preload), `X-Content-Type-Options`, `X-Frame-Options`,
+  `Referrer-Policy`, `Permissions-Policy`. CSP sans nonce (documenté
+  en commentaire) pour préserver la génération statique · testé en
+  prod build + Playwright (thème, images, JSON-LD), zéro violation
+  CSP en console.
+
 ## 0.5.3
 
 - CI GitHub Actions (`.github/workflows/ci.yml`) : tests, type-check,

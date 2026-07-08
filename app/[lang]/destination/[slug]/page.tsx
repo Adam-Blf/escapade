@@ -10,6 +10,7 @@ import { DisruptionBanner } from "@/components/DisruptionBanner";
 import { HolidayBanner } from "@/components/HolidayBanner";
 import { JsonLd } from "@/components/JsonLd";
 import { destinationJsonLd } from "@/lib/jsonld";
+import { wikipediaUrl } from "@/lib/links";
 
 const MONTH_NAMES: Record<Locale, string[]> = {
   fr: ["janv.", "févr.", "mars", "avril", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."],
@@ -140,6 +141,14 @@ export default async function DestinationPage({
         <p className="mt-3 text-sm text-inksoft">
           <span className="font-semibold text-ink">{dict.destinationPage.duoTip}</span> {dest.duoTip}
         </p>
+        <a
+          href={wikipediaUrl(dest)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-3 inline-block font-mono text-xs font-semibold uppercase tracking-widest text-inksoft transition-colors hover:text-maree"
+        >
+          {dict.destinationPage.wikipedia}
+        </a>
       </section>
 
       {/* Activités + budget interactif */}

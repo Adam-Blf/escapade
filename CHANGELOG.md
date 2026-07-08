@@ -3,6 +3,20 @@
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 Versions alignées sur `package.json`.
 
+## 0.5.1
+
+- Page 404 personnalisée (`app/[lang]/not-found.tsx`), sur le thème
+  aviation ("Vol détourné"), plus un filet de secours racine pour un
+  segment de langue invalide.
+- Bouton "Je ne sais pas, surprends-moi" en mode texte : génère des
+  critères aléatoires raisonnables (`lib/surprise.ts`) pour qui n'a pas
+  d'idée précise.
+- Correction : le script anti-flash du thème (inline dans `<script>`)
+  déclenchait un warning React lors du rendu de la limite d'erreur
+  not-found. Remplacé par `next/script` (`strategy="beforeInteractive"`),
+  le pattern officiellement recommandé pour ce cas — confirmé propre en
+  build de production.
+
 ## 0.5.0
 
 - i18n FR/EN : routing par `app/[lang]/` (`proxy.ts` redirige `/` vers la

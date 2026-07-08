@@ -6,13 +6,13 @@ import { motion } from "framer-motion";
  * Petit avion à côté du wordmark : la seule touche "mignonne" volontaire
  * dans un design par ailleurs sobre. S'envole au survol, revient se poser.
  */
-export function PlaneMark() {
+export function PlaneMark({ className = "h-4 w-4" }: { className?: string }) {
   return (
     <motion.svg
       viewBox="0 0 24 24"
       fill="none"
       aria-hidden
-      className="h-4 w-4 text-corail"
+      className={`${className} text-corail`}
       initial={{ x: 0, y: 0, rotate: -8 }}
       whileHover={{ x: 3, y: -3, rotate: 4, transition: { type: "spring", stiffness: 300, damping: 12 } }}
       animate={{ y: [0, -1.5, 0] }}

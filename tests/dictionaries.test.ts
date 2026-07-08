@@ -35,4 +35,13 @@ describe("getDictionary", () => {
     expect(en.comparator.compareCta(1)).not.toContain("destinations");
     expect(en.comparator.compareCta(2)).toContain("destinations");
   });
+
+  it("les libellés de groupe (3+ voyageurs) incluent bien la taille du groupe", () => {
+    for (const lang of LOCALES) {
+      const dict = getDictionary(lang);
+      expect(dict.results.group(4)).toContain("4");
+      expect(dict.results.groupTotal(720)).toContain("720");
+      expect(dict.results.groupChip(4)).toContain("4");
+    }
+  });
 });

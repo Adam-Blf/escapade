@@ -65,6 +65,9 @@ export interface Dictionary {
     duo: string;
     asCouple: string;
     soloOrCouple: string;
+    group: (n: number) => string;
+    groupTotal: (total: number) => string;
+    groupChip: (n: number) => string;
     disclaimer: string;
   };
   fit: { ok: string; tight: string; over: string };
@@ -170,6 +173,9 @@ const fr: Dictionary = {
     duo: "À 2, par pers.",
     asCouple: "à deux",
     soloOrCouple: "solo ou à deux",
+    group: (n) => `À ${n}, par pers.`,
+    groupTotal: (total) => `Total pour le groupe · ${total}€`,
+    groupChip: (n) => `à ${n}`,
     disclaimer:
       "Prix indicatifs (résa anticipée, tarifs jeunes inclus quand ils existent), à vérifier sur SNCF Connect / Ouigo avant de réserver.",
   },
@@ -281,6 +287,9 @@ const en: Dictionary = {
     duo: "As a couple, per person",
     asCouple: "as a couple",
     soloOrCouple: "solo or as a couple",
+    group: (n) => `Group of ${n}, per person`,
+    groupTotal: (total) => `Total for the group: ${total}€`,
+    groupChip: (n) => `group of ${n}`,
     disclaimer:
       "Indicative prices (advance booking, youth fares included where they exist) — check SNCF Connect / Ouigo before booking.",
   },

@@ -3,6 +3,16 @@
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 Versions alignées sur `package.json`.
 
+## 0.5.8
+
+- Fix budget honnête : un groupe de 3 à 8 voyageurs (`t=3..8`) affichait
+  encore les cartes "Solo" et "À deux", jamais son vrai coût de groupe
+  (`totalPP`/`totalGroup` existaient déjà côté `lib/engine.ts` mais
+  n'étaient rendus nulle part). `TicketCard.tsx` affiche désormais une
+  3e carte "À N, par pers." + total groupe quand `travelers >= 3`. Le
+  chip récapitulatif de `Planner.tsx` disait aussi "solo ou à deux"
+  pour ces groupes ; corrigé pour afficher "à N".
+
 ## 0.5.7
 
 - `CONTRIBUTING.md` : workflow PR-first, checklist de vérification,

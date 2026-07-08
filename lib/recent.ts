@@ -10,12 +10,25 @@ export interface RecentSearch {
   at: number;
 }
 
+/**
+ * Rétro-compatibilité : un Criteria persisté avant l'ajout d'un champ
+ * (ex. startDate) n'a pas cette clé en localStorage → undefined, pas null.
+ * On la comble ici une fois pour toutes plutôt que de blinder chaque lecture.
+ */
+function normalize(criteria: Criteria): Criteria {
+  // criteria vient de JSON.parse : le typage ne garantit rien à l'exécution.
+  const raw = criteria as Partial<Criteria>;
+  return { ...criteria, startDate: raw.startDate ?? null };
+}
+
 export function loadRecent(): RecentSearch[] {
   if (typeof window === "undefined") return [];
   try {
     const raw = window.localStorage.getItem(KEY);
     const list = raw ? (JSON.parse(raw) as RecentSearch[]) : [];
-    return Array.isArray(list) ? list.filter((r) => r?.criteria) : [];
+    return Array.isArray(list)
+      ? list.filter((r) => r?.criteria).map((r) => ({ ...r, criteria: normalize(r.criteria) }))
+      : [];
   } catch {
     return [];
   }

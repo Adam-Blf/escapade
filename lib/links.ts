@@ -48,6 +48,15 @@ export function hostelUrl(dest: Destination): string {
   return `https://www.hostelworld.com/s?q=${encodeURIComponent(`${dest.name}, France`)}`;
 }
 
+/**
+ * Page Wikipédia FR de la destination, pour en savoir plus. Toujours FR
+ * (dest.name est le nom français, ex. "Genève") quelle que soit la langue
+ * de l'UI : pas de mapping de titres EN à maintenir pour un simple lien.
+ */
+export function wikipediaUrl(dest: Destination): string {
+  return `https://fr.wikipedia.org/wiki/${encodeURIComponent(dest.name.replace(/ /g, "_"))}`;
+}
+
 /** Lien partageable de la recherche courante (client only). */
 export function searchShareUrl(criteria: Criteria): string {
   const qs = criteriaToParams(criteria).toString();

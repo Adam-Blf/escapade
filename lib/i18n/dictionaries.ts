@@ -96,6 +96,7 @@ export interface Dictionary {
   destinationPage: {
     back: string;
     highlights: string;
+    wikipedia: string;
     duoTip: string;
     activities: string;
     activitiesHelp: (fallback: number) => string;
@@ -207,6 +208,7 @@ const fr: Dictionary = {
   destinationPage: {
     back: "← Retour à la recherche",
     highlights: "Les incontournables",
+    wikipedia: "En savoir plus sur Wikipédia ↗",
     duoTip: "Le bon plan à deux ·",
     activities: "À faire sur place",
     activitiesHelp: (fallback) =>
@@ -323,6 +325,7 @@ const en: Dictionary = {
   destinationPage: {
     back: "← Back to search",
     highlights: "Must-sees",
+    wikipedia: "Read more on Wikipedia ↗",
     duoTip: "Couple tip ·",
     activities: "Things to do",
     activitiesHelp: (fallback) =>

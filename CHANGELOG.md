@@ -3,6 +3,20 @@
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 Versions alignées sur `package.json`.
 
+## 0.6.2
+
+- Lien "En savoir plus sur Wikipédia ↗" (`lib/links.ts` → `wikipediaUrl`)
+  sur chaque page destination. Zéro appel API : juste une URL stable
+  vers `fr.wikipedia.org`, cohérent avec le pattern zéro-coût des
+  autres deep-links (Trainline, Booking, HostelWorld). Volontairement
+  pas de fetch live du résumé Wikipédia : le contenu éditorial des
+  destinations est déjà écrit à la main (ton "budget étudiant"), un
+  extrait encyclopédique générique irait contre ce choix.
+- SNCF open-data (gares) évalué et écarté : le dataset public ne
+  contient pas d'info accessibilité PMR (vérifié empiriquement), et
+  les seules coordonnées qu'il expose sont déjà curées à la main pour
+  les 5 gares d'origine.
+
 ## 0.6.1
 
 - Indice de qualité de l'air (`lib/providers/openmeteo.ts` → `airQualityNormal`) :

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { bookingUrl, hostelUrl, searchShareUrl, trainUrl } from "@/lib/links";
+import { bookingUrl, hostelUrl, searchShareUrl, trainUrl, wikipediaUrl } from "@/lib/links";
 import { destinations } from "@/lib/destinations";
 import type { Criteria } from "@/lib/types";
 
@@ -53,6 +53,12 @@ describe("liens de réservation", () => {
   it("les noms composés donnent des slugs propres", () => {
     const deauville = destinations.find((d) => d.slug === "deauville")!;
     expect(trainUrl(criteria, deauville)).toContain("paris-to-deauville-trouville");
+  });
+
+  it("wikipedia · toujours fr.wikipedia.org, espaces en underscore", () => {
+    expect(wikipediaUrl(etretat)).toBe("https://fr.wikipedia.org/wiki/%C3%89tretat");
+    const geneve = destinations.find((d) => d.slug === "geneve")!;
+    expect(wikipediaUrl(geneve)).toBe(`https://fr.wikipedia.org/wiki/${encodeURIComponent(geneve.name)}`);
   });
 
   describe("searchShareUrl", () => {

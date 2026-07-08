@@ -3,6 +3,13 @@
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 Versions alignées sur `package.json`.
 
+## 0.5.3
+
+- CI GitHub Actions (`.github/workflows/ci.yml`) : tests, type-check,
+  lint et build lancés sur chaque PR et push sur `main`, en jobs
+  parallèles. À activer en required check dans les réglages GitHub du
+  repo pour bloquer les merges rouges.
+
 ## 0.5.2
 
 - JSON-LD structuré (`lib/jsonld.ts`) : schema `WebSite` sur la home,

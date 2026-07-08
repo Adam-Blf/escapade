@@ -45,6 +45,9 @@ sk_live_*
 # vercel
 .vercel
 
+# playwright mcp debug artifacts
+.playwright-mcp/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

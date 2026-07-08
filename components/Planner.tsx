@@ -33,7 +33,7 @@ function criteriaChips(c: Criteria): string[] {
   if (c.vibes.length) chips.push(c.vibes.join(" + "));
   if (c.budget !== null) chips.push(`budget ${c.budget}€`);
   chips.push(c.travelers === 1 ? "solo" : c.travelers === 2 ? "à deux" : "solo ou à deux");
-  if (c.startDate !== null) {
+  if (c.startDate) {
     const [y, m, d] = c.startDate.split("-").map(Number);
     chips.push(`départ le ${d} ${MONTH_NAMES[m - 1]} ${y}`);
   } else if (c.month !== null) {

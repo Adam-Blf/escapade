@@ -3,6 +3,16 @@
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 Versions alignées sur `package.json`.
 
+## 0.5.2
+
+- JSON-LD structuré (`lib/jsonld.ts`) : schema `WebSite` sur la home,
+  `TouristAttraction` (géo, image, région) sur chaque page destination.
+  Échappement défensif des `<` pour éviter toute fermeture prématurée du
+  `<script>` (`safeJsonLd`).
+- `metadataBase` corrigé : `icon.tsx` / `apple-icon.tsx` /
+  `opengraph-image.tsx` déplacés sous `app/[lang]/` pour hériter du
+  domaine de prod (auparavant résolus vers `localhost:3000`).
+
 ## 0.5.1
 
 - Page 404 personnalisée (`app/[lang]/not-found.tsx`), sur le thème

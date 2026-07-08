@@ -3,6 +3,16 @@
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 Versions alignées sur `package.json`.
 
+## 0.6.0
+
+- Alerte jours fériés (`lib/providers/joursFeries.ts`) : API officielle
+  gratuite `calendrier.api.gouv.fr` (sans clé, un seul fichier JSON
+  couvrant 2006-2031). Signale sur la page destination si le séjour
+  chevauche un jour férié France métropole, prix train/hébergement
+  souvent plus élevés à ces dates. Nouvelle route `/api/holidays`,
+  composant `HolidayBanner.tsx` (silencieux par défaut, même pattern
+  que `DisruptionBanner`).
+
 ## 0.5.8
 
 - Fix budget honnête : un groupe de 3 à 8 voyageurs (`t=3..8`) affichait

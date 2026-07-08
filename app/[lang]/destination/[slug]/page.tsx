@@ -7,6 +7,7 @@ import { isOriginSlug, DEFAULT_ORIGIN } from "@/lib/origins";
 import { getDictionary, isLocale, LOCALES, type Locale } from "@/lib/i18n/dictionaries";
 import { DestinationBudget } from "@/components/DestinationBudget";
 import { DisruptionBanner } from "@/components/DisruptionBanner";
+import { HolidayBanner } from "@/components/HolidayBanner";
 import { JsonLd } from "@/components/JsonLd";
 import { destinationJsonLd } from "@/lib/jsonld";
 
@@ -86,6 +87,7 @@ export default async function DestinationPage({
 
       <div className="pt-6">
         <DisruptionBanner destSlug={dest.slug} origin={o} month={month} startDate={startDate} />
+        <HolidayBanner month={month} startDate={startDate} nights={nights} />
       </div>
 
       {/* Hero */}

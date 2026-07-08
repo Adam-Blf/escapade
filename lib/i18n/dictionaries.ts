@@ -117,6 +117,7 @@ export interface Dictionary {
     free: string;
   };
   disruptions: { title: string };
+  holidays: { title: string };
   donate: { supportProject: string };
   footer: { disclaimer: string };
 }
@@ -228,6 +229,7 @@ const fr: Dictionary = {
     free: "gratuit",
   },
   disruptions: { title: "Perturbations SNCF signalées" },
+  holidays: { title: "Jour férié pendant ton séjour, prix souvent plus élevés" },
   donate: { supportProject: "Soutenir le projet ↗" },
   footer: {
     disclaimer:
@@ -342,6 +344,7 @@ const en: Dictionary = {
     free: "free",
   },
   disruptions: { title: "SNCF disruptions reported" },
+  holidays: { title: "Public holiday during your stay, prices often higher" },
   donate: { supportProject: "Support the project ↗" },
   footer: {
     disclaimer:

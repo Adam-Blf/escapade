@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { applyTheme, currentTheme, type Theme } from "@/lib/theme";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 
 function SunIcon() {
   return (
@@ -32,6 +33,7 @@ function MoonIcon() {
 
 /** Bascule clair/sombre manuelle · gagne sur la préférence système, persistée. */
 export function ThemeToggle() {
+  const { dict } = useLocale();
   // null avant hydratation : le no-flash script a déjà posé data-theme sur
   // <html>, on le lit après montage pour ne jamais désynchroniser le SSR.
   const [theme, setTheme] = useState<Theme | null>(null);
@@ -54,7 +56,7 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      aria-label={theme === "dark" ? "Passer en thème clair" : "Passer en thème sombre"}
+      aria-label={theme === "dark" ? dict.header.themeToLight : dict.header.themeToDark}
       className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line text-inksoft transition-colors hover:border-maree hover:text-ink"
     >
       {theme === null ? null : theme === "dark" ? <SunIcon /> : <MoonIcon />}

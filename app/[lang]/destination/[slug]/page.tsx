@@ -4,27 +4,32 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { destinations } from "@/lib/destinations";
 import { isOriginSlug, DEFAULT_ORIGIN } from "@/lib/origins";
+import { getDictionary, isLocale, LOCALES, type Locale } from "@/lib/i18n/dictionaries";
 import { DestinationBudget } from "@/components/DestinationBudget";
 import { DisruptionBanner } from "@/components/DisruptionBanner";
 
-const MONTH_NAMES = [
-  "janv.", "févr.", "mars", "avril", "mai", "juin",
-  "juil.", "août", "sept.", "oct.", "nov.", "déc.",
-];
+const MONTH_NAMES: Record<Locale, string[]> = {
+  fr: ["janv.", "févr.", "mars", "avril", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."],
+  en: ["Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.", "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec."],
+};
 
 export function generateStaticParams() {
-  return destinations.map((d) => ({ slug: d.slug }));
+  return LOCALES.flatMap((lang) => destinations.map((d) => ({ lang, slug: d.slug })));
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ lang: string; slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { lang: rawLang, slug } = await params;
+  const lang = isLocale(rawLang) ? rawLang : "fr";
   const dest = destinations.find((d) => d.slug === slug);
   if (!dest) return {};
-  const description = `${dest.tagline} Budget réel train + logement + repas depuis Paris, Lyon, Lille, Marseille ou Bordeaux.`;
+  const description =
+    lang === "fr"
+      ? `${dest.tagline} Budget réel train + logement + repas depuis Paris, Lyon, Lille, Marseille ou Bordeaux.`
+      : `${dest.tagline} Real train + lodging + food budget from Paris, Lyon, Lille, Marseille or Bordeaux.`;
   return {
     title: dest.name,
     description,
@@ -37,10 +42,15 @@ export default async function DestinationPage({
   params,
   searchParams,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ lang: string; slug: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { slug } = await params;
+  const { lang: rawLang, slug } = await params;
+  if (!isLocale(rawLang)) notFound();
+  const lang: Locale = rawLang;
+  const dict = getDictionary(lang);
+  const monthNames = MONTH_NAMES[lang];
+
   const sp = await searchParams;
   const dest = destinations.find((d) => d.slug === slug);
   if (!dest) notFound();
@@ -59,10 +69,10 @@ export default async function DestinationPage({
     <main className="mx-auto w-full max-w-6xl px-5 pb-24">
       <nav className="pt-6">
         <Link
-          href="/"
+          href={`/${lang}`}
           className="font-mono text-xs font-semibold uppercase tracking-widest text-inksoft transition-colors hover:text-ink"
         >
-          ← Retour à la recherche
+          {dict.destinationPage.back}
         </Link>
       </nav>
 
@@ -86,7 +96,7 @@ export default async function DestinationPage({
                 key={m}
                 className="rounded-full bg-maree/10 px-2.5 py-1 font-mono text-xs font-semibold text-maree"
               >
-                {MONTH_NAMES[m - 1]}
+                {monthNames[m - 1]}
               </span>
             ))}
           </p>
@@ -105,7 +115,7 @@ export default async function DestinationPage({
 
       {/* Incontournables */}
       <section className="pt-10">
-        <h2 className="mb-3 font-display text-2xl font-bold">Les incontournables</h2>
+        <h2 className="mb-3 font-display text-2xl font-bold">{dict.destinationPage.highlights}</h2>
         <ul className="grid gap-2 sm:grid-cols-3">
           {dest.highlights.map((h) => (
             <li
@@ -118,7 +128,7 @@ export default async function DestinationPage({
           ))}
         </ul>
         <p className="mt-3 text-sm text-inksoft">
-          <span className="font-semibold text-ink">Le bon plan à deux ·</span> {dest.duoTip}
+          <span className="font-semibold text-ink">{dict.destinationPage.duoTip}</span> {dest.duoTip}
         </p>
       </section>
 

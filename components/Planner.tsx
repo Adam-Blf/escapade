@@ -9,6 +9,7 @@ import { DEFAULT_ORIGIN, ORIGINS, getOrigin } from "@/lib/origins";
 import { criteriaFromParams, criteriaToParams } from "@/lib/share";
 import { loadRecent, saveRecent, type RecentSearch } from "@/lib/recent";
 import { MAX_COMPARE, canCompare, selectedResults, toggleCompare } from "@/lib/compare";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { Criteria, OriginSlug, Result } from "@/lib/types";
 import { CriteriaForm } from "./CriteriaForm";
 import { TicketCard } from "./TicketCard";
@@ -16,34 +17,57 @@ import { Comparator } from "./Comparator";
 
 type Mode = "texte" | "criteres";
 
-const EXAMPLES = [
+const EXAMPLES_FR = [
   "Je suis pas riche mais j'ai envie de voir la mer, budget 300€, fin août, seule ou à 2",
   "Une semaine de rando en montagne en septembre, 500€, à deux",
   "Week-end citytrip pas cher en décembre, solo",
 ];
 
-const MONTH_NAMES = [
+const EXAMPLES_EN = [
+  "I'm broke but I want to see the sea, €300 budget, late August, solo or as a couple",
+  "A week of hiking in the mountains in September, €500, as a couple",
+  "Cheap city break weekend in December, solo",
+];
+
+const MONTH_NAMES_FR = [
   "janvier", "février", "mars", "avril", "mai", "juin",
   "juillet", "août", "septembre", "octobre", "novembre", "décembre",
 ];
 
-function criteriaChips(c: Criteria): string[] {
-  const chips: string[] = [];
-  chips.push(`départ ${getOrigin(c.origin).name}`);
-  if (c.vibes.length) chips.push(c.vibes.join(" + "));
-  if (c.budget !== null) chips.push(`budget ${c.budget}€`);
-  chips.push(c.travelers === 1 ? "solo" : c.travelers === 2 ? "à deux" : "solo ou à deux");
-  if (c.startDate) {
-    const [y, m, d] = c.startDate.split("-").map(Number);
-    chips.push(`départ le ${d} ${MONTH_NAMES[m - 1]} ${y}`);
-  } else if (c.month !== null) {
-    chips.push(MONTH_NAMES[c.month - 1]);
-  }
-  chips.push(`${c.nights} nuits`);
-  return chips;
-}
+const MONTH_NAMES_EN = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
 
 export function Planner() {
+  const { lang, dict } = useLocale();
+  const monthNames = lang === "fr" ? MONTH_NAMES_FR : MONTH_NAMES_EN;
+  const examples = lang === "fr" ? EXAMPLES_FR : EXAMPLES_EN;
+
+  function criteriaChips(c: Criteria): string[] {
+    const chips: string[] = [];
+    chips.push(`${dict.origin.label} ${getOrigin(c.origin).name}`);
+    if (c.vibes.length) {
+      chips.push(c.vibes.map((v) => dict.criteriaForm.vibes[v]).join(" + "));
+    }
+    if (c.budget !== null) chips.push(`${c.budget}€`);
+    chips.push(
+      c.travelers === 1
+        ? "solo"
+        : c.travelers === 2
+          ? dict.results.asCouple
+          : dict.results.soloOrCouple
+    );
+    if (c.startDate) {
+      const [y, m, d] = c.startDate.split("-").map(Number);
+      chips.push(`${d} ${monthNames[m - 1]} ${y}`);
+    } else if (c.month !== null) {
+      chips.push(monthNames[c.month - 1]);
+    }
+    chips.push(`${c.nights} ${dict.results.soloNights}`);
+    return chips;
+  }
+
   const [mode, setMode] = useState<Mode>("texte");
   const [origin, setOrigin] = useState<OriginSlug>(DEFAULT_ORIGIN);
   const [text, setText] = useState("");
@@ -107,17 +131,15 @@ export function Planner() {
           className="pb-10 pt-16 sm:pt-24"
         >
           <p className="mb-4 font-mono text-xs font-semibold uppercase tracking-[0.35em] text-maree">
-            Départ {getOrigin(origin).name}, {getOrigin(origin).station}
+            {dict.hero.departureLabel} {getOrigin(origin).name}, {getOrigin(origin).station}
           </p>
           <h1 className="max-w-3xl font-display text-5xl font-extrabold leading-[1.02] tracking-tight sm:text-7xl">
-            Dis ton envie.
+            {dict.hero.title1}
             <br />
-            On sort le <span className="text-corail">billet</span>.
+            {dict.hero.title2Pre}
+            <span className="text-corail">{dict.hero.title2Billet}</span>.
           </h1>
-          <p className="mt-5 max-w-xl text-lg text-inksoft">
-            Une phrase ou trois cases à cocher : Escapade classe les destinations
-            et calcule le vrai budget, seul(e) ou à deux. Pensé pour les budgets étudiants.
-          </p>
+          <p className="mt-5 max-w-xl text-lg text-inksoft">{dict.hero.subtitle}</p>
         </motion.div>
 
         {/* Panneau de recherche */}
@@ -133,7 +155,7 @@ export function Planner() {
                 htmlFor="origin"
                 className="font-mono text-xs font-semibold uppercase tracking-widest text-inksoft"
               >
-                Départ
+                {dict.origin.label}
               </label>
               <select
                 id="origin"
@@ -148,37 +170,37 @@ export function Planner() {
                 ))}
               </select>
             </div>
-          <div
-            role="tablist"
-            aria-label="Mode de recherche"
-            className="inline-flex rounded-full border border-line bg-paper p-1"
-          >
-            {(
-              [
-                ["texte", "Je raconte"],
-                ["criteres", "Je coche"],
-              ] as Array<[Mode, string]>
-            ).map(([m, label]) => (
-              <button
-                key={m}
-                role="tab"
-                aria-selected={mode === m}
-                onClick={() => setMode(m)}
-                className={`relative rounded-full px-5 py-2 text-sm font-semibold transition-colors ${
-                  mode === m ? "text-white" : "text-inksoft hover:text-ink"
-                }`}
-              >
-                {mode === m && (
-                  <motion.span
-                    layoutId="mode-pill"
-                    className="absolute inset-0 rounded-full bg-maree"
-                    transition={{ type: "spring", stiffness: 300, damping: 28 }}
-                  />
-                )}
-                <span className="relative">{label}</span>
-              </button>
-            ))}
-          </div>
+            <div
+              role="tablist"
+              aria-label={dict.modeTabs.label}
+              className="inline-flex rounded-full border border-line bg-paper p-1"
+            >
+              {(
+                [
+                  ["texte", dict.modeTabs.text],
+                  ["criteres", dict.modeTabs.criteria],
+                ] as Array<[Mode, string]>
+              ).map(([m, label]) => (
+                <button
+                  key={m}
+                  role="tab"
+                  aria-selected={mode === m}
+                  onClick={() => setMode(m)}
+                  className={`relative rounded-full px-5 py-2 text-sm font-semibold transition-colors ${
+                    mode === m ? "text-white" : "text-inksoft hover:text-ink"
+                  }`}
+                >
+                  {mode === m && (
+                    <motion.span
+                      layoutId="mode-pill"
+                      className="absolute inset-0 rounded-full bg-maree"
+                      transition={{ type: "spring", stiffness: 300, damping: 28 }}
+                    />
+                  )}
+                  <span className="relative">{label}</span>
+                </button>
+              ))}
+            </div>
           </div>
 
           <AnimatePresence mode="wait">
@@ -198,19 +220,19 @@ export function Planner() {
                   className="flex flex-col gap-4"
                 >
                   <label htmlFor="envie" className="sr-only">
-                    Décris ton envie de vacances
+                    {dict.textMode.fieldLabel}
                   </label>
                   <textarea
                     id="envie"
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                     rows={3}
-                    placeholder={`Ex : ${EXAMPLES[0]}`}
+                    placeholder={`${dict.textMode.placeholderPrefix}${examples[0]}`}
                     className="w-full resize-none rounded-2xl border border-line bg-paper px-4 py-3 text-base placeholder:text-inksoft/60"
                   />
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-xs text-inksoft">Essaie :</span>
-                    {EXAMPLES.map((ex) => (
+                    <span className="text-xs text-inksoft">{dict.textMode.tryLabel}</span>
+                    {examples.map((ex) => (
                       <button
                         key={ex}
                         type="button"
@@ -226,7 +248,7 @@ export function Planner() {
                     disabled={!text.trim()}
                     className="self-start rounded-full bg-corail px-6 py-3 font-display text-lg font-bold text-white transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40"
                   >
-                    Trouver où partir
+                    {dict.textMode.submit}
                   </button>
                 </form>
               </motion.div>
@@ -248,7 +270,7 @@ export function Planner() {
         {!results && recent.length > 0 && (
           <div className="flex flex-wrap items-center gap-2 pt-6">
             <span className="font-mono text-xs uppercase tracking-widest text-inksoft">
-              Reprendre
+              {dict.recent.label}
             </span>
             {recent.map((r) => (
               <button
@@ -267,7 +289,7 @@ export function Planner() {
         {results && applied && (
           <div className="pb-24 pt-10">
             <div className="mb-6 flex flex-wrap items-center gap-2">
-              <h2 className="mr-2 font-display text-2xl font-bold">Ce qu&apos;on te propose</h2>
+              <h2 className="mr-2 font-display text-2xl font-bold">{dict.results.heading}</h2>
               {criteriaChips(applied).map((chip) => (
                 <span
                   key={chip}
@@ -302,10 +324,7 @@ export function Planner() {
                 />
               ))}
             </div>
-            <p className="mt-8 text-xs text-inksoft">
-              Prix indicatifs (résa anticipée, tarifs jeunes inclus quand ils existent),
-              à vérifier sur SNCF Connect / Ouigo avant de réserver.
-            </p>
+            <p className="mt-8 text-xs text-inksoft">{dict.results.disclaimer}</p>
 
             {/* Barre flottante de comparaison */}
             <AnimatePresence>
@@ -318,7 +337,7 @@ export function Planner() {
                   onClick={() => setComparatorOpen(true)}
                   className="fixed bottom-6 left-1/2 z-40 -translate-x-1/2 rounded-full bg-ink px-6 py-3 font-display text-sm font-bold text-white shadow-[0_8px_30px_rgba(16,34,43,0.3)]"
                 >
-                  Comparer {compared.length} destination{compared.length > 1 ? "s" : ""}
+                  {dict.comparator.compareCta(compared.length)}
                 </motion.button>
               )}
             </AnimatePresence>

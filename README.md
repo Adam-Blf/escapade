@@ -7,7 +7,7 @@
 [![top language](https://img.shields.io/github/languages/top/Adam-Blf/escapade?style=flat-square)](https://github.com/Adam-Blf/escapade)
 [![license](https://img.shields.io/github/license/Adam-Blf/escapade?style=flat-square&color=D4A437)](LICENSE)
 <!-- adam-badges:end -->
-![version](https://img.shields.io/badge/version-0.4.0-001329?style=flat-square)
+![version](https://img.shields.io/badge/version-0.5.0-001329?style=flat-square)
 
 Planificateur de vacances au départ de Paris, Lyon, Lille, Marseille ou
 Bordeaux, pensé pour les budgets étudiants. Décris ton envie en une phrase
@@ -68,6 +68,10 @@ une clé gratuite, elle enrichit l'affichage.
 - [x] Dark mode manuel (bascule persistée, gagne sur la préférence système,
       zéro flash) en plus du support `prefers-color-scheme`, reduced motion
       respecté, animations framer-motion
+- [x] i18n FR/EN (`/fr`, `/en`) : coquille UI entièrement traduite,
+      routing par `app/[lang]/`, sitemap et metadata par langue. Le contenu
+      éditorial des destinations reste en français dans les deux langues
+      pour l'instant.
 
 ## Stack
 

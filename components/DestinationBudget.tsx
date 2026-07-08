@@ -6,6 +6,7 @@ import { estimate } from "@/lib/engine";
 import { ORIGINS, getOrigin } from "@/lib/origins";
 import { activitiesOf } from "@/lib/activities";
 import { co2Comparison, co2SavedVsCar, haversineKm } from "@/lib/co2";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { Destination, OriginSlug } from "@/lib/types";
 
 /**
@@ -23,6 +24,7 @@ export function DestinationBudget({
   initialNights: number;
   initialTravelers: number | null;
 }) {
+  const { dict } = useLocale();
   const served = ORIGINS.filter((o) => dest.transports[o.slug] && o.slug !== dest.slug);
   const fallbackOrigin = served[0]?.slug ?? "paris";
   const [origin, setOrigin] = useState<OriginSlug>(
@@ -66,7 +68,7 @@ export function DestinationBudget({
       {/* Activités */}
       <section>
         <h2 className="mb-4 font-display text-2xl font-bold">
-          À faire sur place
+          {dict.destinationPage.activities}
         </h2>
         <ul className="space-y-2">
           {list.map((a) => (
@@ -87,49 +89,46 @@ export function DestinationBudget({
                     a.price === 0 ? "text-maree" : ""
                   }`}
                 >
-                  {a.price === 0 ? "gratuit" : `${a.price}€`}
+                  {a.price === 0 ? dict.destinationPage.free : `${a.price}€`}
                 </span>
               </label>
             </li>
           ))}
         </ul>
         <p className="mt-3 text-xs text-inksoft">
-          Coche ce qui te tente : le budget à droite se met à jour. Sans sélection,
-          on compte un forfait de {est.activities}€.
+          {dict.destinationPage.activitiesHelp(est.activities)}
         </p>
 
         {/* Impact carbone · calcul 100% local (haversine + facteurs ADEME), aucun appel réseau */}
         <div className="mt-8 rounded-2xl border border-line bg-card p-5">
-          <h3 className="mb-3 font-display text-lg font-bold">Impact carbone (aller-retour)</h3>
+          <h3 className="mb-3 font-display text-lg font-bold">{dict.destinationPage.co2Title}</h3>
           <dl className="grid grid-cols-3 gap-3 text-center">
             <div className="rounded-xl bg-maree/10 py-3">
-              <dt className="text-xs text-inksoft">Train</dt>
+              <dt className="text-xs text-inksoft">{dict.destinationPage.co2Train}</dt>
               <dd className="font-mono text-lg font-bold text-maree">{co2.train} kg</dd>
             </div>
             <div className="rounded-xl bg-paper py-3">
-              <dt className="text-xs text-inksoft">Voiture</dt>
+              <dt className="text-xs text-inksoft">{dict.destinationPage.co2Car}</dt>
               <dd className="font-mono text-lg font-bold">{co2.car} kg</dd>
             </div>
             <div className="rounded-xl bg-paper py-3">
-              <dt className="text-xs text-inksoft">Avion</dt>
+              <dt className="text-xs text-inksoft">{dict.destinationPage.co2Plane}</dt>
               <dd className="font-mono text-lg font-bold">{co2.plane} kg</dd>
             </div>
           </dl>
           <p className="mt-3 text-xs text-inksoft">
-            Le train t&apos;évite ~{savedVsCar.kg} kg de CO2e par rapport à la voiture, soit{" "}
-            {savedVsCar.percent}% en moins. Ordres de grandeur ADEME (Base Carbone), non
-            contractuels.
+            {dict.destinationPage.co2Saved(savedVsCar.kg, savedVsCar.percent)}
           </p>
         </div>
       </section>
 
       {/* Budget */}
       <aside className="h-fit rounded-3xl border border-line bg-card p-6 lg:sticky lg:top-6">
-        <h2 className="mb-4 font-display text-xl font-bold">Ton budget</h2>
+        <h2 className="mb-4 font-display text-xl font-bold">{dict.destinationPage.budgetTitle}</h2>
 
         <div className="mb-4 flex flex-col gap-3">
           <label className="text-sm font-semibold" htmlFor="dest-origin">
-            Départ de
+            {dict.destinationPage.departureFrom}
           </label>
           <select
             id="dest-origin"
@@ -145,7 +144,7 @@ export function DestinationBudget({
           </select>
 
           <label className="text-sm font-semibold" htmlFor="dest-nights">
-            Nuits : <span className="font-mono text-maree">{nights}</span>
+            {dict.destinationPage.nights} : <span className="font-mono text-maree">{nights}</span>
           </label>
           <input
             id="dest-nights"
@@ -159,8 +158,8 @@ export function DestinationBudget({
 
           <div className="flex gap-2">
             {[
-              [false, "Solo dortoir"],
-              [true, "À deux"],
+              [false, dict.destinationPage.soloDorm],
+              [true, dict.destinationPage.duoLabel],
             ].map(([isDuo, label]) => (
               <button
                 key={String(isDuo)}
@@ -180,20 +179,21 @@ export function DestinationBudget({
 
         <dl className="space-y-2 border-t border-dashed border-line pt-4 text-sm">
           <div className="flex justify-between">
-            <dt className="text-inksoft">Train AR ({getOrigin(origin).name})</dt>
+            <dt className="text-inksoft">{dict.destinationPage.trainLine} ({getOrigin(origin).name})</dt>
             <dd className="font-mono">{est.transport}€</dd>
           </div>
           <div className="flex justify-between">
-            <dt className="text-inksoft">Dodo · {nights} nuits</dt>
+            <dt className="text-inksoft">{dict.destinationPage.lodging} · {nights} {dict.results.soloNights}</dt>
             <dd className="font-mono">{lodging}€</dd>
           </div>
           <div className="flex justify-between">
-            <dt className="text-inksoft">Repas · {nights + 1} jours</dt>
+            <dt className="text-inksoft">{dict.destinationPage.meals} · {nights + 1}</dt>
             <dd className="font-mono">{est.food}€</dd>
           </div>
           <div className="flex justify-between">
             <dt className="text-inksoft">
-              Activités{picked.size > 0 ? ` (${picked.size})` : " (forfait)"}
+              {dict.destinationPage.activitiesLine}
+              {picked.size > 0 ? ` (${picked.size})` : ` (${dict.destinationPage.activitiesForfait})`}
             </dt>
             <dd className="font-mono">{picked.size > 0 ? activityTotal : est.activities}€</dd>
           </div>
@@ -206,7 +206,7 @@ export function DestinationBudget({
           className="mt-4 border-t-2 border-line pt-4 font-display text-4xl font-bold text-maree"
         >
           ~{total}€
-          <span className="ml-2 text-base font-normal text-inksoft">par personne</span>
+          <span className="ml-2 text-base font-normal text-inksoft">{dict.destinationPage.perPerson}</span>
         </motion.p>
         <p className="mt-1 text-xs text-inksoft">{transport.label}, {transport.duration}</p>
       </aside>

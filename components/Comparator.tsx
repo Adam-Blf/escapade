@@ -2,11 +2,17 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { getOrigin } from "@/lib/origins";
+import { useLocale } from "@/lib/i18n/LocaleProvider";
 import type { Criteria, Result } from "@/lib/types";
 
-const MONTH_NAMES = [
+const MONTH_NAMES_FR = [
   "janv.", "févr.", "mars", "avril", "mai", "juin",
   "juil.", "août", "sept.", "oct.", "nov.", "déc.",
+];
+
+const MONTH_NAMES_EN = [
+  "Jan.", "Feb.", "Mar.", "Apr.", "May", "Jun.",
+  "Jul.", "Aug.", "Sep.", "Oct.", "Nov.", "Dec.",
 ];
 
 export function Comparator({
@@ -20,6 +26,8 @@ export function Comparator({
   onRemove: (slug: string) => void;
   onClose: () => void;
 }) {
+  const { lang, dict } = useLocale();
+  const monthNames = lang === "fr" ? MONTH_NAMES_FR : MONTH_NAMES_EN;
   const originCode = getOrigin(criteria.origin).code;
 
   return (
@@ -41,14 +49,14 @@ export function Comparator({
             className="max-h-[85vh] w-full max-w-4xl overflow-y-auto rounded-3xl border border-line bg-card p-6 shadow-[0_8px_40px_rgba(16,34,43,0.25)] sm:p-8"
           >
             <div className="mb-6 flex items-center justify-between">
-              <h2 className="font-display text-2xl font-bold">Comparateur</h2>
+              <h2 className="font-display text-2xl font-bold">{dict.comparator.title}</h2>
               <button
                 type="button"
                 onClick={onClose}
-                aria-label="Fermer le comparateur"
+                aria-label={dict.comparator.close}
                 className="rounded-full border border-line px-3 py-1.5 text-xs font-semibold text-inksoft transition-colors hover:border-corail hover:text-corail"
               >
-                Fermer
+                {dict.comparator.close}
               </button>
             </div>
 
@@ -74,7 +82,7 @@ export function Comparator({
                     <button
                       type="button"
                       onClick={() => onRemove(r.dest.slug)}
-                      aria-label={`Retirer ${r.dest.name} du comparateur`}
+                      aria-label={`${dict.comparator.remove} ${r.dest.name}`}
                       className="rounded-full border border-line px-2 py-1 text-xs text-inksoft transition-colors hover:border-corail hover:text-corail"
                     >
                       ✕
@@ -83,27 +91,27 @@ export function Comparator({
 
                   <dl className="space-y-1.5 border-t border-dashed border-line pt-3 text-sm">
                     <div className="flex justify-between">
-                      <dt className="text-inksoft">Transport</dt>
+                      <dt className="text-inksoft">{dict.comparator.transport}</dt>
                       <dd className="text-right font-mono text-xs">
                         {r.transport.duration}, {r.transport.priceAR}€ AR
                       </dd>
                     </div>
                     <div className="flex justify-between">
-                      <dt className="text-inksoft">Solo</dt>
+                      <dt className="text-inksoft">{dict.comparator.solo}</dt>
                       <dd className="font-mono font-semibold text-maree">
                         ~{r.est.totalSolo}€
                       </dd>
                     </div>
                     <div className="flex justify-between">
-                      <dt className="text-inksoft">À 2, par pers.</dt>
+                      <dt className="text-inksoft">{dict.comparator.duo}</dt>
                       <dd className="font-mono font-semibold text-maree">
                         ~{r.est.totalDuo}€
                       </dd>
                     </div>
                     <div className="flex justify-between">
-                      <dt className="text-inksoft">Meilleurs mois</dt>
+                      <dt className="text-inksoft">{dict.comparator.bestMonths}</dt>
                       <dd className="text-right text-xs">
-                        {r.dest.bestMonths.map((m) => MONTH_NAMES[m - 1]).join(", ")}
+                        {r.dest.bestMonths.map((m) => monthNames[m - 1]).join(", ")}
                       </dd>
                     </div>
                   </dl>

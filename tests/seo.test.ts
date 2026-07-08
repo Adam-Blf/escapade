@@ -3,22 +3,25 @@ import sitemap from "@/app/sitemap";
 import robots from "@/app/robots";
 import manifest from "@/app/manifest";
 import { destinations } from "@/lib/destinations";
+import { LOCALES } from "@/lib/i18n/dictionaries";
 import { SITE_URL } from "@/lib/site";
 
 describe("sitemap", () => {
-  it("contient la home + une entrée par destination", () => {
+  it("contient une home + une entrée par destination, pour chaque langue", () => {
     const entries = sitemap();
-    expect(entries).toHaveLength(destinations.length + 1);
-    expect(entries[0].url).toBe(SITE_URL);
+    expect(entries).toHaveLength(LOCALES.length * (destinations.length + 1));
+    for (const lang of LOCALES) {
+      expect(entries.map((e) => e.url)).toContain(`${SITE_URL}/${lang}`);
+    }
   });
 
-  it("chaque destination a une URL /destination/<slug> unique et valide", () => {
-    const urls = sitemap()
-      .slice(1)
-      .map((e) => e.url);
+  it("chaque destination a une URL /<lang>/destination/<slug> unique et valide", () => {
+    const urls = sitemap().map((e) => e.url);
     expect(new Set(urls).size).toBe(urls.length);
-    for (const d of destinations) {
-      expect(urls).toContain(`${SITE_URL}/destination/${d.slug}`);
+    for (const lang of LOCALES) {
+      for (const d of destinations) {
+        expect(urls).toContain(`${SITE_URL}/${lang}/destination/${d.slug}`);
+      }
     }
   });
 });

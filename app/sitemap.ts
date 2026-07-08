@@ -1,18 +1,23 @@
 import type { MetadataRoute } from "next";
 import { destinations } from "@/lib/destinations";
+import { LOCALES } from "@/lib/i18n/dictionaries";
 import { SITE_URL } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    {
-      url: SITE_URL,
+  const entries: MetadataRoute.Sitemap = [];
+  for (const lang of LOCALES) {
+    entries.push({
+      url: `${SITE_URL}/${lang}`,
       changeFrequency: "weekly",
       priority: 1,
-    },
-    ...destinations.map((d) => ({
-      url: `${SITE_URL}/destination/${d.slug}`,
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
-    })),
-  ];
+    });
+    for (const d of destinations) {
+      entries.push({
+        url: `${SITE_URL}/${lang}/destination/${d.slug}`,
+        changeFrequency: "monthly",
+        priority: 0.7,
+      });
+    }
+  }
+  return entries;
 }

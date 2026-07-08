@@ -3,6 +3,16 @@
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 Versions alignées sur `package.json`.
 
+## 0.6.1
+
+- Indice de qualité de l'air (`lib/providers/openmeteo.ts` → `airQualityNormal`) :
+  EAQI moyenné sur les 3 dernières années pour le mois demandé, via
+  l'archive historique Open-Meteo Air Quality (gratuite, sans clé,
+  confirmée dispo dès 2013). Nouveau champ `airQualityAvg` sur
+  `PriceQuote`, badge "IQA XX" sur les cartes résultat à côté du
+  climat. Même limite honnête que la normale climatique : une
+  moyenne statistique, pas une prévision.
+
 ## 0.6.0
 
 - Alerte jours fériés (`lib/providers/joursFeries.ts`) : API officielle

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { climateNormal } from "@/lib/providers/openmeteo";
+import { airQualityNormal, climateNormal } from "@/lib/providers/openmeteo";
 
 const coords = { lat: 43.7, lng: 7.26 };
 
@@ -68,5 +68,48 @@ describe("climateNormal", () => {
 
     const result = await climateNormal(coords, null);
     expect(result).not.toBeNull();
+  });
+});
+
+describe("airQualityNormal", () => {
+  it("moyenne l'EAQI horaire sur plusieurs années", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      jsonResponse({ hourly: { european_aqi: [20, 30, 40] } })
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const result = await airQualityNormal(coords, 8);
+    expect(result).toBe(30); // moyenne de 20,30,40
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+  });
+
+  it("ignore les valeurs null et continue avec les années disponibles", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(jsonResponse({ hourly: { european_aqi: [10, null] } }))
+      .mockRejectedValueOnce(new Error("network down"))
+      .mockResolvedValueOnce(jsonResponse({ hourly: { european_aqi: [30] } }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    const result = await airQualityNormal(coords, 7);
+    expect(result).toBe(20); // moyenne de 10 et 30
+  });
+
+  it("null si toutes les années échouent", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("down")));
+    expect(await airQualityNormal(coords, 6)).toBeNull();
+  });
+
+  it("null si l'API répond mais sans donnée exploitable", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(jsonResponse({ hourly: {} })));
+    expect(await airQualityNormal(coords, 6)).toBeNull();
+  });
+
+  it("mois null retombe sur le mois courant sans planter", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(jsonResponse({ hourly: { european_aqi: [25] } }))
+    );
+    expect(await airQualityNormal(coords, null)).toBe(25);
   });
 });

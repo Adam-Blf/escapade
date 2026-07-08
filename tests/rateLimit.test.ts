@@ -44,4 +44,15 @@ describe("checkRateLimit", () => {
     expect(blocked.retryAfterMs).toBeLessThanOrEqual(3000);
     expect(blocked.retryAfterMs).toBeGreaterThan(2900);
   });
+
+  it("purge paresseuse : une clé expirée depuis longtemps ne plante pas le prochain appel", () => {
+    vi.useFakeTimers();
+    const stale = `stale-${Math.random()}`;
+    checkRateLimit(stale, 1, 1000);
+    // Dépasse à la fois la fenêtre de la clé et l'intervalle de purge (5 min).
+    vi.advanceTimersByTime(6 * 60_000);
+    const fresh = `fresh-${Math.random()}`;
+    expect(checkRateLimit(fresh, 1, 1000).allowed).toBe(true);
+    expect(checkRateLimit(stale, 1, 1000).allowed).toBe(true);
+  });
 });

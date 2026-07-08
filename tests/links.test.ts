@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { bookingUrl, hostelUrl, trainUrl } from "@/lib/links";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { bookingUrl, hostelUrl, searchShareUrl, trainUrl } from "@/lib/links";
 import { destinations } from "@/lib/destinations";
 import type { Criteria } from "@/lib/types";
 
@@ -53,5 +53,23 @@ describe("liens de réservation", () => {
   it("les noms composés donnent des slugs propres", () => {
     const deauville = destinations.find((d) => d.slug === "deauville")!;
     expect(trainUrl(criteria, deauville)).toContain("paris-to-deauville-trouville");
+  });
+
+  describe("searchShareUrl", () => {
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it("sans window (SSR) · base vide, garde la query string", () => {
+      const url = searchShareUrl(criteria);
+      expect(url.startsWith("/?")).toBe(true);
+      expect(url).toContain("o=paris");
+    });
+
+    it("avec window · préfixe par l'origine courante", () => {
+      vi.stubGlobal("window", { location: { origin: "https://escapade.beloucif.com" } });
+      const url = searchShareUrl(criteria);
+      expect(url.startsWith("https://escapade.beloucif.com/?")).toBe(true);
+    });
   });
 });

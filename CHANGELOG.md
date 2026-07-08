@@ -3,6 +3,20 @@
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 Versions alignées sur `package.json`.
 
+## 0.5.6
+
+- Coverage tests (`@vitest/coverage-v8`) + 44 tests ajoutés sur des
+  trous réels : `lib/prices.ts` (orchestration + cache, 0% → couvert),
+  `lib/providers/amadeus.ts` (0% → couvert, incl. cache token isolé
+  entre tests via `vi.resetModules`), `lib/providers/navitia.ts`
+  (durées de trajet), `lib/i18n/dictionaries.ts`, `lib/origins.ts`
+  (fallback), `lib/links.ts` (`searchShareUrl`), `lib/recent.ts`
+  (JSON corrompu), `lib/rateLimit.ts` (purge paresseuse), et un test
+  d'intégrité du catalogue `lib/destinations.ts` qui encode les règles
+  documentées dans CLAUDE.md (≥4 activités, 5 origines, pas
+  d'auto-liaison marseille/lyon/lille). 79,7% → 97,1% de couverture
+  statements sur `lib/`.
+
 ## 0.5.5
 
 - Dependabot (`.github/dependabot.yml`) : mises à jour hebdo npm

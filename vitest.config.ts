@@ -10,5 +10,11 @@ export default defineConfig({
   test: {
     include: ["tests/**/*.test.ts"],
     environment: "node",
+    coverage: {
+      provider: "v8",
+      include: ["lib/**/*.ts"],
+      exclude: ["lib/**/*.test.ts", "lib/useLiveQuote.ts", "lib/types.ts"],
+      reporter: ["text", "html"],
+    },
   },
 });

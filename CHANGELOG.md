@@ -3,6 +3,18 @@
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 Versions alignées sur `package.json`.
 
+## 0.5.7
+
+- `CONTRIBUTING.md` : workflow PR-first, checklist de vérification,
+  invariants du catalogue destinations, pointeur vers les ADR.
+- `.github/PULL_REQUEST_TEMPLATE.md` : checklist tests/version/docs.
+- `docs/adr/0001-csp-sans-nonce.md` : premier ADR, documente le choix
+  CSP sans nonce (`'unsafe-inline'` assumé) pour préserver la
+  génération statique — contexte, alternative rejetée, conséquences.
+- `docs/ARCHITECTURE.md` mis à jour : chemins icônes corrigés
+  (déplacés sous `[lang]` en 0.5.2), modules `co2.ts`/`surprise.ts`/
+  `jsonld.ts` documentés, section CI/sécurité ajoutée.
+
 ## 0.5.6
 
 - Coverage tests (`@vitest/coverage-v8`) + 44 tests ajoutés sur des

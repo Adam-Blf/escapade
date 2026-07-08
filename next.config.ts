@@ -1,13 +1,6 @@
 import type { NextConfig } from "next";
 
-/**
- * Pas de nonce : le script anti-flash du thème (next/script beforeInteractive)
- * et les styles inline de framer-motion/Tailwind exigent 'unsafe-inline'. Un
- * CSP à base de nonce forcerait le rendu dynamique sur toutes les pages
- * (voir docs Next · content-security-policy.md), ce qui casserait la
- * génération statique visée par le projet pour un gain marginal ici (aucun
- * script tiers, aucun contenu utilisateur injecté côté serveur).
- */
+/** Pas de nonce, `'unsafe-inline'` assumé : voir docs/adr/0001-csp-sans-nonce.md */
 const CSP = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline'",

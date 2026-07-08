@@ -3,7 +3,7 @@ import { getOrigin } from "./origins";
 import { addNights, resolveCheckin, toISODate } from "./dates";
 import { amadeusAvailable, cheapestDouble } from "./providers/amadeus";
 import { bestJourneyDuration, navitiaAvailable } from "./providers/navitia";
-import { climateNormal } from "./providers/openmeteo";
+import { airQualityNormal, climateNormal } from "./providers/openmeteo";
 import type { OriginSlug, PriceQuote } from "./types";
 
 /**
@@ -48,12 +48,13 @@ export async function getQuote(
     hotelLive: false,
     climateAvgMaxC: null,
     climateRainyDaysPct: null,
+    airQualityAvg: null,
   };
 
   const checkin = resolveCheckin(startDate, month);
   const checkout = addNights(checkin, nights);
 
-  const [duration, hotel, climate] = await Promise.allSettled([
+  const [duration, hotel, climate, airQuality] = await Promise.allSettled([
     navitiaAvailable()
       ? bestJourneyDuration(getOrigin(origin).coords, dest.coords, checkin)
       : Promise.resolve(null),
@@ -61,6 +62,7 @@ export async function getQuote(
       ? cheapestDouble(dest.coords, toISODate(checkin), toISODate(checkout))
       : Promise.resolve(null),
     climateNormal(dest.coords, month),
+    airQualityNormal(dest.coords, month),
   ]);
 
   if (duration.status === "fulfilled" && duration.value) {
@@ -74,6 +76,9 @@ export async function getQuote(
   if (climate.status === "fulfilled" && climate.value) {
     quote.climateAvgMaxC = climate.value.avgMaxC;
     quote.climateRainyDaysPct = climate.value.rainyDaysPct;
+  }
+  if (airQuality.status === "fulfilled" && airQuality.value != null) {
+    quote.airQualityAvg = airQuality.value;
   }
 
   cache.set(key, { at: Date.now(), quote });

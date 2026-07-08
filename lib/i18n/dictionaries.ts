@@ -74,6 +74,7 @@ export interface Dictionary {
   ticket: {
     live: string;
     hotelLive: string;
+    airQuality: string;
     reserveTrain: string;
     hotels: string;
     hostels: string;
@@ -184,6 +185,7 @@ const fr: Dictionary = {
   ticket: {
     live: "live",
     hotelLive: "hôtel live",
+    airQuality: "IQA",
     reserveTrain: "Réserver le train ↗",
     hotels: "Hôtels ↗",
     hostels: "Auberges ↗",
@@ -299,6 +301,7 @@ const en: Dictionary = {
   ticket: {
     live: "live",
     hotelLive: "live hotel",
+    airQuality: "AQI",
     reserveTrain: "Book the train ↗",
     hotels: "Hotels ↗",
     hostels: "Hostels ↗",

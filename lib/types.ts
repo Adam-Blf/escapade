@@ -106,4 +106,6 @@ export interface PriceQuote {
   /** Normale climatique du mois demandé (Open-Meteo, gratuit, sans clé) */
   climateAvgMaxC: number | null;
   climateRainyDaysPct: number | null;
+  /** Indice européen qualité de l'air (EAQI), normale du mois (Open-Meteo, gratuit, sans clé) */
+  airQualityAvg: number | null;
 }

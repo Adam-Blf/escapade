@@ -146,6 +146,11 @@ export function TicketCard({
                     {quote.climateAvgMaxC}°C
                   </span>
                 )}
+                {quote?.airQualityAvg != null && (
+                  <span className="ml-2 rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-bold text-white">
+                    {dict.ticket.airQuality} {quote.airQualityAvg}
+                  </span>
+                )}
               </>
             )}
           </p>

@@ -20,7 +20,7 @@ lib/            source de vérité, testée en isolation (tests/*.test.ts)
   ├─ providers/
   │    ├─ navitia.ts     durée réelle de trajet + perturbations (SNCF, env-gated)
   │    ├─ amadeus.ts     prix hôtel live (env-gated)
-  │    ├─ openmeteo.ts   normale climatique du mois (gratuit, sans clé, toujours actif)
+  │    ├─ openmeteo.ts   normale climatique + qualité de l'air (EAQI) du mois, gratuit sans clé
   │    └─ joursFeries.ts jours fériés France métropole (gratuit, sans clé, calendrier.api.gouv.fr)
   ├─ links.ts            deep-links de réservation (Trainline, Booking, HostelWorld)
   ├─ share.ts            Criteria ↔ query params, assainissement des entrées

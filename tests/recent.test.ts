@@ -29,6 +29,11 @@ describe("recent", () => {
     expect(loadRecent()).toHaveLength(5);
   });
 
+  it("données corrompues en localStorage : renvoie [] sans planter", () => {
+    window.localStorage.setItem("escapade.recent", "{ceci n'est pas du JSON");
+    expect(loadRecent()).toEqual([]);
+  });
+
   it("rétro-compatibilité · un Criteria persisté sans startDate ne plante pas", () => {
     // Simule une entrée écrite avant l'ajout du champ startDate au type Criteria.
     const legacy = { ...criteria } as Partial<Criteria>;

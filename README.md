@@ -76,6 +76,22 @@ une clé gratuite, elle enrichit l'affichage.
       éditorial des destinations reste en français dans les deux langues
       pour l'instant.
 
+## Architecture
+
+```mermaid
+flowchart TB
+    PWA["PWA Next.js<br/>App Router · FR/EN via app/lang"]
+    PAGES["Pages<br/>accueil · destination/slug · soutenir"]
+    COMP["Composants<br/>Planner · Comparator · CriteriaForm · TicketCard · DisruptionBanner"]
+    API["app/api<br/>prices · holidays · disruptions"]
+    EXT["Sources gratuites<br/>open data · APIs publiques"]
+    SEO["SEO<br/>sitemap · robots · JsonLd · opengraph"]
+    PWA --> PAGES --> COMP
+    COMP --> API --> EXT
+    PWA --> SEO
+```
+
+
 ## Stack
 
 Next.js 16 (App Router, Turbopack), TypeScript, Tailwind CSS 4,

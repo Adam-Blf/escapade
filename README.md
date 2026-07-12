@@ -17,29 +17,29 @@ en train direct) et calcule le
 budget réel, solo et à deux, avec des prix qui se rafraîchissent en direct
 quand c'est possible.
 
-## Contrainte n°1 · zéro coût
+## Contrainte n°1 - zéro coût
 
 Aucune dépendance payante. Chaque intégration externe suit le même
 principe : sans clé, l'app tourne à 100 % sur son catalogue statique ; avec
 une clé gratuite, elle enrichit l'affichage.
 
-- **Train** · pas d'API de prix publique côté SNCF → prix indicatif du
+- **Train** - pas d'API de prix publique côté SNCF → prix indicatif du
   catalogue toujours affiché comme tel. Avec `SNCF_API_KEY` (Navitia,
   5000 req/jour gratuites), la durée réelle du meilleur trajet remplace
   l'estimation.
-- **Hôtel** · avec `AMADEUS_CLIENT_ID` / `AMADEUS_CLIENT_SECRET`
+- **Hôtel** - avec `AMADEUS_CLIENT_ID` / `AMADEUS_CLIENT_SECRET`
   (environnement test Amadeus Self-Service, gratuit), la chambre double la
   moins chère autour de la destination est affichée en direct.
-- **Réservation** · pas d'API de booking : des deep-links vers Trainline,
+- **Réservation** - pas d'API de booking : des deep-links vers Trainline,
   Booking.com et HostelWorld, préremplis avec les bons critères. Zéro
   commission, zéro clé.
-- **Don** · bouton de soutien optionnel via un Payment Link Stripe (aucun
+- **Don** - bouton de soutien optionnel via un Payment Link Stripe (aucun
   coût fixe, aucun backend). Masqué si `NEXT_PUBLIC_STRIPE_DONATION_URL`
   n'est pas défini.
-- **Icônes / OG / PWA** · générées dynamiquement au build via `next/og`
+- **Icônes / OG / PWA** - générées dynamiquement au build via `next/og`
   (`app/icon.tsx`, `app/opengraph-image.tsx`...), zéro asset binaire à
   maintenir.
-- **Analytics** · Vercel Analytics, gratuit sur le plan hobby.
+- **Analytics** - Vercel Analytics, gratuit sur le plan hobby.
 
 ## Features
 
@@ -80,12 +80,12 @@ une clé gratuite, elle enrichit l'affichage.
 
 ```mermaid
 flowchart TB
-    PWA["PWA Next.js<br/>App Router · FR/EN via app/lang"]
-    PAGES["Pages<br/>accueil · destination/slug · soutenir"]
-    COMP["Composants<br/>Planner · Comparator · CriteriaForm · TicketCard · DisruptionBanner"]
-    API["app/api<br/>prices · holidays · disruptions"]
-    EXT["Sources gratuites<br/>open data · APIs publiques"]
-    SEO["SEO<br/>sitemap · robots · JsonLd · opengraph"]
+    PWA["PWA Next.js<br/>App Router - FR/EN via app/lang"]
+    PAGES["Pages<br/>accueil - destination/slug - soutenir"]
+    COMP["Composants<br/>Planner - Comparator - CriteriaForm - TicketCard - DisruptionBanner"]
+    API["app/api<br/>prices - holidays - disruptions"]
+    EXT["Sources gratuites<br/>open data - APIs publiques"]
+    SEO["SEO<br/>sitemap - robots - JsonLd - opengraph"]
     PWA --> PAGES --> COMP
     COMP --> API --> EXT
     PWA --> SEO
@@ -110,7 +110,7 @@ npm run lint        # eslint
 
 ## Variables d'environnement
 
-Toutes optionnelles — voir [`.env.example`](.env.example) pour le détail et
+Toutes optionnelles - voir [`.env.example`](.env.example) pour le détail et
 les liens d'inscription (comptes gratuits) :
 
 | Variable | Sans elle | Avec elle |

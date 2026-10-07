@@ -3,6 +3,26 @@
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 Versions alignées sur `package.json`.
 
+## [0.6.3] - 2026-10-07
+
+First tagged release. Latest changes:
+
+- docs: add colors to mermaid diagrams (#74)
+- docs: typography pass, no em dash or middle dot (#47)
+- docs: add mermaid architecture diagram to README (#46)
+- fix: source missing hero images for 6 European destinations (#44)
+- feat: add Wikipedia link on destination pages (#43)
+- feat: add seasonal air quality index to price quotes (#42)
+- feat: warn when a trip overlaps a French public holiday (#41)
+- fix: show real group pricing for 3-8 travelers, not solo/duo (#40)
+- docs: add CONTRIBUTING, PR template, first ADR (#39)
+- test: close coverage gaps in lib/, 79.7% -> 97.1% (#38)
+- feat: add Dependabot and gitleaks secret scanning (#29)
+- feat: add HTTP security headers (#28)
+- feat: add CI pipeline for tests, typecheck, lint, build (#27)
+- feat: add JSON-LD structured data (#26)
+- fix: move icon/OG image files under [lang] segment (#25)
+
 ## 0.6.3
 
 - Fix images cassées : les 6 destinations européennes (Amsterdam,

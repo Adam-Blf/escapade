@@ -267,7 +267,7 @@ export function TicketCard({
           href={trainUrl(criteria, dest)}
           target="_blank"
           rel="noopener noreferrer"
-          className="rounded-full bg-maree px-4 py-2 text-xs font-semibold text-white transition-transform hover:scale-[1.03] active:scale-[0.97]"
+          className="rounded-full bg-maree px-4 py-2 text-xs font-semibold text-onfill transition-transform hover:scale-[1.03] active:scale-[0.97]"
         >
           {dict.ticket.reserveTrain}
         </a>
@@ -275,7 +275,7 @@ export function TicketCard({
           href={bookingUrl(criteria, dest)}
           target="_blank"
           rel="noopener noreferrer"
-          className="rounded-full border border-line px-4 py-2 text-xs font-semibold text-inksoft transition-colors hover:border-maree hover:text-ink"
+          className="rounded-full border border-edge px-4 py-2 text-xs font-semibold text-inksoft transition-colors hover:border-maree hover:text-ink"
         >
           {dict.ticket.hotels}
         </a>
@@ -283,7 +283,7 @@ export function TicketCard({
           href={hostelUrl(dest)}
           target="_blank"
           rel="noopener noreferrer"
-          className="rounded-full border border-line px-4 py-2 text-xs font-semibold text-inksoft transition-colors hover:border-maree hover:text-ink"
+          className="rounded-full border border-edge px-4 py-2 text-xs font-semibold text-inksoft transition-colors hover:border-maree hover:text-ink"
         >
           {dict.ticket.hostels}
         </a>
@@ -291,7 +291,7 @@ export function TicketCard({
           type="button"
           onClick={share}
           aria-label={dict.ticket.share}
-          className="rounded-full border border-line px-4 py-2 text-xs font-semibold text-inksoft transition-colors hover:border-corail hover:text-corail"
+          className="rounded-full border border-edge px-4 py-2 text-xs font-semibold text-inksoft transition-colors hover:border-corail hover:text-corail"
         >
           {copied ? dict.ticket.shareCopied : dict.ticket.share}
         </button>
@@ -303,8 +303,8 @@ export function TicketCard({
             aria-pressed={compareSelected}
             className={`ml-auto rounded-full border px-4 py-2 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
               compareSelected
-                ? "border-maree bg-maree text-white"
-                : "border-line text-inksoft hover:border-maree hover:text-ink"
+                ? "border-maree bg-maree text-onfill"
+                : "border-edge text-inksoft hover:border-maree hover:text-ink"
             }`}
           >
             {compareSelected ? dict.ticket.compareSelected : dict.ticket.compare}

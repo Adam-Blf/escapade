@@ -51,7 +51,7 @@ export default function NotFound() {
       <p className="mt-4 max-w-md text-inksoft">{c.body}</p>
       <Link
         href={`/${lang}`}
-        className="mt-8 rounded-full bg-corail px-6 py-3 font-display text-sm font-bold text-white transition-transform hover:scale-[1.02] active:scale-[0.98]"
+        className="mt-8 rounded-full bg-corail px-6 py-3 font-display text-sm font-bold text-onfill transition-transform hover:scale-[1.02] active:scale-[0.98]"
       >
         {c.cta}
       </Link>

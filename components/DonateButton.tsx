@@ -5,7 +5,7 @@
  */
 export function DonateButton({
   className = "",
-  children = "Soutenir le projet ↗",
+  children = "Garder Escapade gratuit ↗",
 }: {
   className?: string;
   children?: React.ReactNode;
@@ -18,7 +18,7 @@ export function DonateButton({
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className={`rounded-full border border-line px-4 py-1.5 text-xs font-semibold text-inksoft transition-colors hover:border-corail hover:text-corail ${className}`}
+      className={`rounded-full border border-edge px-4 py-1.5 text-xs font-semibold text-inksoft transition-colors hover:border-corail hover:text-corail ${className}`}
     >
       {children}
     </a>

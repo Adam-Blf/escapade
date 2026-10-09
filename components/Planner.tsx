@@ -176,7 +176,7 @@ export function Planner() {
             <div
               role="tablist"
               aria-label={dict.modeTabs.label}
-              className="inline-flex rounded-full border border-line bg-paper p-1"
+              className="inline-flex rounded-full border border-edge bg-paper p-1"
             >
               {(
                 [
@@ -190,7 +190,7 @@ export function Planner() {
                   aria-selected={mode === m}
                   onClick={() => setMode(m)}
                   className={`relative rounded-full px-5 py-2 text-sm font-semibold transition-colors ${
-                    mode === m ? "text-white" : "text-inksoft hover:text-ink"
+                    mode === m ? "text-onfill" : "text-inksoft hover:text-ink"
                   }`}
                 >
                   {mode === m && (
@@ -240,7 +240,7 @@ export function Planner() {
                         key={ex}
                         type="button"
                         onClick={() => setText(ex)}
-                        className="rounded-full border border-line px-3 py-1 text-xs text-inksoft transition-colors hover:border-maree hover:text-ink"
+                        className="rounded-full border border-edge px-3 py-1 text-xs text-inksoft transition-colors hover:border-maree hover:text-ink"
                       >
                         {ex.length > 48 ? `${ex.slice(0, 48)}…` : ex}
                       </button>
@@ -250,14 +250,14 @@ export function Planner() {
                     <button
                       type="submit"
                       disabled={!text.trim()}
-                      className="self-start rounded-full bg-corail px-6 py-3 font-display text-lg font-bold text-white transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40"
+                      className="self-start rounded-full bg-corail px-6 py-3 font-display text-lg font-bold text-onfill transition-transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-40"
                     >
                       {dict.textMode.submit}
                     </button>
                     <button
                       type="button"
                       onClick={() => search(surpriseCriteria(origin))}
-                      className="self-start rounded-full border border-dashed border-line px-5 py-3 text-sm font-semibold text-inksoft transition-colors hover:border-corail hover:text-corail"
+                      className="self-start rounded-full border border-dashed border-edge px-5 py-3 text-sm font-semibold text-inksoft transition-colors hover:border-corail hover:text-corail"
                     >
                       {dict.textMode.surpriseMe}
                     </button>
@@ -289,9 +289,9 @@ export function Planner() {
                 key={r.at}
                 type="button"
                 onClick={() => search(r.criteria)}
-                className="rounded-full border border-line px-3 py-1 text-xs text-inksoft transition-colors hover:border-maree hover:text-ink"
+                className="rounded-full border border-edge px-3 py-1 text-xs text-inksoft transition-colors hover:border-maree hover:text-ink"
               >
-                {criteriaChips(r.criteria).slice(0, 4).join(" · ")}
+                {criteriaChips(r.criteria).slice(0, 4).join(", ")}
               </button>
             ))}
           </div>
@@ -347,7 +347,7 @@ export function Planner() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 20 }}
                   onClick={() => setComparatorOpen(true)}
-                  className="fixed bottom-6 left-1/2 z-40 -translate-x-1/2 rounded-full bg-ink px-6 py-3 font-display text-sm font-bold text-white shadow-[0_8px_30px_rgba(16,34,43,0.3)]"
+                  className="fixed bottom-6 left-1/2 z-40 -translate-x-1/2 rounded-full bg-ink px-6 py-3 font-display text-sm font-bold text-paper shadow-[0_8px_30px_rgba(16,34,43,0.3)]"
                 >
                   {dict.comparator.compareCta(compared.length)}
                 </motion.button>

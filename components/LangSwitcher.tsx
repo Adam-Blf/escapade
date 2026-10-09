@@ -12,14 +12,14 @@ export function LangSwitcher() {
   const rest = pathname.split("/").slice(2).join("/");
 
   return (
-    <div className="flex overflow-hidden rounded-full border border-line text-xs font-semibold">
+    <div className="flex overflow-hidden rounded-full border border-edge text-xs font-semibold">
       {LOCALES.map((l) => (
         <Link
           key={l}
           href={`/${l}${rest ? `/${rest}` : ""}`}
           aria-current={l === lang ? "true" : undefined}
           className={`px-2.5 py-1.5 uppercase transition-colors ${
-            l === lang ? "bg-maree text-white" : "text-inksoft hover:text-ink"
+            l === lang ? "bg-maree text-onfill" : "text-inksoft hover:text-ink"
           }`}
         >
           {l}

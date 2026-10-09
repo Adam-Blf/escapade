@@ -54,7 +54,7 @@ export function Comparator({
                 type="button"
                 onClick={onClose}
                 aria-label={dict.comparator.close}
-                className="rounded-full border border-line px-3 py-1.5 text-xs font-semibold text-inksoft transition-colors hover:border-corail hover:text-corail"
+                className="rounded-full border border-edge px-3 py-1.5 text-xs font-semibold text-inksoft transition-colors hover:border-corail hover:text-corail"
               >
                 {dict.comparator.close}
               </button>
@@ -83,7 +83,7 @@ export function Comparator({
                       type="button"
                       onClick={() => onRemove(r.dest.slug)}
                       aria-label={`${dict.comparator.remove} ${r.dest.name}`}
-                      className="rounded-full border border-line px-2 py-1 text-xs text-inksoft transition-colors hover:border-corail hover:text-corail"
+                      className="rounded-full border border-edge px-2 py-1 text-xs text-inksoft transition-colors hover:border-corail hover:text-corail"
                     >
                       ✕
                     </button>

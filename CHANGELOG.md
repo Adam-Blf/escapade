@@ -3,6 +3,20 @@
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/).
 Versions alignées sur `package.json`.
 
+## [0.7.0] - 2026-10-09
+
+### Modifié
+
+- Les boutons et liens d'action disent ce que le visiteur obtient : « Une destination surprise »,
+  « Garder Escapade gratuit », « Horaires et prix du train », « Trouver un hôtel », « Trouver une auberge »,
+  « La fiche Wikipédia complète » (FR et EN). Tableau avant/après dans `docs/boutons.md`.
+- Contrastes : le texte des boutons pleins passe à 4,5:1 minimum dans les deux thèmes (corail clair
+  `#e8402f` vers `#cc3322`, texte sombre sur les aplats corail et marée en thème sombre), les bordures
+  de boutons passent à 3:1 minimum (nouveau jeton `edge`).
+- Page 404 racine : bouton « Trouver où partir », même corail que le reste du site.
+- Un tiret long retiré du texte anglais de la page de soutien, séparateur des recherches récentes
+  remplacé par une virgule.
+
 ## [0.6.3] - 2026-10-07
 
 First tagged release. Latest changes:

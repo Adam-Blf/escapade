@@ -6,9 +6,11 @@
   --ink: #10222b;
   --ink-soft: #51666f;
   --maree: #0e6d68;
-  --corail: #e8402f;
+  --corail: #cc3322;
   --sable: #e8c98f;
   --line: #cfdbd4;
+  --edge: #6a867c;
+  --on-fill: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -21,6 +23,8 @@
     --corail: #ff6a5f;
     --sable: #d8b678;
     --line: #24404a;
+  --edge: #5a808d;
+  --on-fill: #0c1a20;
   }
 }
 
@@ -32,9 +36,11 @@
   --ink: #10222b;
   --ink-soft: #51666f;
   --maree: #0e6d68;
-  --corail: #e8402f;
+  --corail: #cc3322;
   --sable: #e8c98f;
   --line: #cfdbd4;
+  --edge: #6a867c;
+  --on-fill: #ffffff;
 }
 
 :root[data-theme="dark"] {
@@ -46,6 +52,8 @@
   --corail: #ff6a5f;
   --sable: #d8b678;
   --line: #24404a;
+  --edge: #5a808d;
+  --on-fill: #0c1a20;
 }
 
 @theme inline {
@@ -57,6 +65,8 @@
   --color-corail: var(--corail);
   --color-sable: var(--sable);
   --color-line: var(--line);
+  --color-edge: var(--edge);
+  --color-onfill: var(--on-fill);
   --font-display: var(--font-bricolage), sans-serif;
   --font-body: var(--font-instrument), sans-serif;
   --font-mono: var(--font-plex), monospace;

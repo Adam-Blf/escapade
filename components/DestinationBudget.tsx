@@ -167,8 +167,8 @@ export function DestinationBudget({
                 onClick={() => setDuo(isDuo as boolean)}
                 className={`flex-1 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
                   duo === isDuo
-                    ? "border-maree bg-maree text-white"
-                    : "border-line text-inksoft hover:border-maree"
+                    ? "border-maree bg-maree text-onfill"
+                    : "border-edge text-inksoft hover:border-maree"
                 }`}
               >
                 {label}

@@ -23,7 +23,7 @@ const COPY: Record<
       "Escapade is free with no commission. A donation, if you'd like, helps keep the project alive.",
     p1: "Escapade is free, no account needed, no commission on booking links: every train, hotel or hostel you book through the site earns nobody here a single euro.",
     p2: "The destination catalogue, indicative prices and live quotes are kept up to date by hand. If the site saved you time or found you a good deal, a free-amount donation helps cover hosting and the time spent on it.",
-    notReady: "Online donations aren't set up yet — check back soon.",
+    notReady: "Online donations aren't set up yet, check back soon.",
     back: "← Back to search",
   },
 };

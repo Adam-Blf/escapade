@@ -87,8 +87,8 @@ export function CriteriaForm({
               key={v}
               className={`cursor-pointer rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
                 vibes.includes(v)
-                  ? "border-maree bg-maree text-white"
-                  : "border-line bg-card hover:border-maree"
+                  ? "border-maree bg-maree text-onfill"
+                  : "border-edge bg-card hover:border-maree"
               }`}
             >
               <input
@@ -190,7 +190,7 @@ export function CriteriaForm({
 
       <button
         type="submit"
-        className="mt-1 self-start rounded-full bg-corail px-6 py-3 font-display text-lg font-bold text-white transition-transform hover:scale-[1.02] active:scale-[0.98]"
+        className="mt-1 self-start rounded-full bg-corail px-6 py-3 font-display text-lg font-bold text-onfill transition-transform hover:scale-[1.02] active:scale-[0.98]"
       >
         {dict.criteriaForm.submit}
       </button>

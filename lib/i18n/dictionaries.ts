@@ -129,7 +129,7 @@ const fr: Dictionary = {
     tagline: "planificateur de vacances, budget honnête",
     themeToLight: "Passer en thème clair",
     themeToDark: "Passer en thème sombre",
-    donate: "Soutenir le projet ↗",
+    donate: "Garder Escapade gratuit ↗",
   },
   hero: {
     departureLabel: "Départ",
@@ -145,7 +145,7 @@ const fr: Dictionary = {
     placeholderPrefix: "Ex : ",
     tryLabel: "Essaie :",
     submit: "Trouver où partir",
-    surpriseMe: "Je ne sais pas, surprends-moi",
+    surpriseMe: "Une destination surprise",
   },
   criteriaForm: {
     budgetLabel: "Budget par personne",
@@ -187,9 +187,9 @@ const fr: Dictionary = {
     live: "live",
     hotelLive: "hôtel live",
     airQuality: "IQA",
-    reserveTrain: "Réserver le train ↗",
-    hotels: "Hôtels ↗",
-    hostels: "Auberges ↗",
+    reserveTrain: "Horaires et prix du train ↗",
+    hotels: "Trouver un hôtel ↗",
+    hostels: "Trouver une auberge ↗",
     share: "Partager",
     shareCopied: "Lien copié ✓",
     compare: "Comparer",
@@ -208,7 +208,7 @@ const fr: Dictionary = {
   destinationPage: {
     back: "← Retour à la recherche",
     highlights: "Les incontournables",
-    wikipedia: "En savoir plus sur Wikipédia ↗",
+    wikipedia: "La fiche Wikipédia complète ↗",
     duoTip: "Le bon plan à deux ·",
     activities: "À faire sur place",
     activitiesHelp: (fallback) =>
@@ -234,7 +234,7 @@ const fr: Dictionary = {
   },
   disruptions: { title: "Perturbations SNCF signalées" },
   holidays: { title: "Jour férié pendant ton séjour, prix souvent plus élevés" },
-  donate: { supportProject: "Soutenir le projet ↗" },
+  donate: { supportProject: "Garder Escapade gratuit ↗" },
   footer: {
     disclaimer:
       "Photos : Wikipédia / Wikimedia Commons. Prix indicatifs calculés pour la ville de départ choisie, sans valeur contractuelle.",
@@ -246,7 +246,7 @@ const en: Dictionary = {
     tagline: "vacation planner, honest budget",
     themeToLight: "Switch to light theme",
     themeToDark: "Switch to dark theme",
-    donate: "Support the project ↗",
+    donate: "Keep Escapade free ↗",
   },
   hero: {
     departureLabel: "Departure",
@@ -262,7 +262,7 @@ const en: Dictionary = {
     placeholderPrefix: "E.g.: ",
     tryLabel: "Try:",
     submit: "Find where to go",
-    surpriseMe: "I don't know, surprise me",
+    surpriseMe: "A surprise destination",
   },
   criteriaForm: {
     budgetLabel: "Budget per person",
@@ -304,9 +304,9 @@ const en: Dictionary = {
     live: "live",
     hotelLive: "live hotel",
     airQuality: "AQI",
-    reserveTrain: "Book the train ↗",
-    hotels: "Hotels ↗",
-    hostels: "Hostels ↗",
+    reserveTrain: "Train times and prices ↗",
+    hotels: "Find a hotel ↗",
+    hostels: "Find a hostel ↗",
     share: "Share",
     shareCopied: "Link copied ✓",
     compare: "Compare",
@@ -325,7 +325,7 @@ const en: Dictionary = {
   destinationPage: {
     back: "← Back to search",
     highlights: "Must-sees",
-    wikipedia: "Read more on Wikipedia ↗",
+    wikipedia: "The Wikipedia entry, in French ↗",
     duoTip: "Couple tip ·",
     activities: "Things to do",
     activitiesHelp: (fallback) =>
@@ -351,7 +351,7 @@ const en: Dictionary = {
   },
   disruptions: { title: "SNCF disruptions reported" },
   holidays: { title: "Public holiday during your stay, prices often higher" },
-  donate: { supportProject: "Support the project ↗" },
+  donate: { supportProject: "Keep Escapade free ↗" },
   footer: {
     disclaimer:
       "Photos: Wikipedia / Wikimedia Commons. Indicative prices for the chosen departure city, not contractually binding.",

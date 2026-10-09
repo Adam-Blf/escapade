@@ -30,13 +30,13 @@ export default function RootNotFound() {
               marginTop: "2rem",
               padding: "0.75rem 1.5rem",
               borderRadius: "999px",
-              background: "#e8402f",
+              background: "#cc3322",
               color: "white",
               fontWeight: 700,
               textDecoration: "none",
             }}
           >
-            Escapade →
+            Trouver où partir →
           </Link>
         </main>
       </body>

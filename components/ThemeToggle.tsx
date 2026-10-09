@@ -57,7 +57,7 @@ export function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label={theme === "dark" ? dict.header.themeToLight : dict.header.themeToDark}
-      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line text-inksoft transition-colors hover:border-maree hover:text-ink"
+      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-edge text-inksoft transition-colors hover:border-maree hover:text-ink"
     >
       {theme === null ? null : theme === "dark" ? <SunIcon /> : <MoonIcon />}
     </button>
